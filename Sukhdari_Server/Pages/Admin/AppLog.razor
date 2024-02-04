@@ -1,0 +1,48 @@
+﻿@page "/applog"
+@layout StoreAdminLayoutT
+@using System.IO
+@attribute [Authorize(Roles = Common.StaticDetails.Role_Admin)]
+
+<br />
+<h1>Application Log Data</h1>
+
+@if (logContent == null)
+{
+    <p>Loading log data...</p>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <pre class="m-0">@logContent</pre>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    string logContent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationState;
+        var today = DateTime.Now;
+        var fileName = $"logs/appLog-{today:yyyyMMdd}.txt";
+
+        try
+        {
+            // Allow shared access to the file
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream))
+            {
+                logContent = await reader.ReadToEndAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle file access errors gracefully
+            logContent = $"Error reading log file: {ex.Message}";
+        }
+    }
+}

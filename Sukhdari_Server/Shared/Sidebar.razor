@@ -1,0 +1,116 @@
+<!-- Main Sidebar Container -->
+  <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/store/dashboard" class="brand-link text-center">
+      @* <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> *@
+      <span class="brand-text font-weight-light">Sukhdari</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex flex-column align-items-center">
+        <div class="image">
+          <img src="https://cdn-icons-png.flaticon.com/512/21/21104.png" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="profile" class="d-block">@username</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <AuthorizeView Roles="StoreAdmin">
+                <NavLink class="nav-link d-flex align-items-center" href="/store/dashboard" Match="NavLinkMatch.All">
+                <span class="nav-icon oi oi-dashboard ml-2" aria-hidden="true"></span> 
+                <p class="ml-2">Dashboard</p>
+            </NavLink>
+            </AuthorizeView>
+            <AuthorizeView Roles="Admin">
+                <NavLink class="nav-link d-flex align-items-center" href="/admin" Match="NavLinkMatch.All">
+                <span class="nav-icon oi oi-dashboard ml-2" aria-hidden="true"></span> 
+                <p class="ml-2">Dashboard</p>
+            </NavLink>
+            </AuthorizeView>
+          </li>
+          
+          <li class="nav-item">
+              
+              <AuthorizeView Roles="StoreAdmin">
+                  <NavLink class="nav-link d-flex align-items-center" href="/category" Match="NavLinkMatch.All">
+                    <span class="nav-icon oi oi-tag ml-2" aria-hidden="true"></span> 
+                    
+                    <p class="ml-2">
+                    Categories
+                  </p>
+                </NavLink>
+            </AuthorizeView>
+          </li>
+          
+          <li class="nav-item">
+               <AuthorizeView Roles="StoreAdmin">
+                <NavLink class="nav-link d-flex align-items-center" href="/products" Match="NavLinkMatch.All">
+                    <span class="nav-icon oi oi-grid-three-up ml-2" aria-hidden="true"></span> 
+                    
+                    <p class="ml-2">
+                    Products
+                  </p>
+                </NavLink>
+            </AuthorizeView>
+             <AuthorizeView Roles="Admin">
+                <NavLink class="nav-link d-flex align-items-center" href="/types" Match="NavLinkMatch.All">
+                    <span class="nav-icon oi oi-grid-three-up ml-2" aria-hidden="true"></span>
+                    <p class="ml-2">
+                    Types and Tags
+                  </p>
+                </NavLink>
+            </AuthorizeView>
+          </li>
+
+          <li class="nav-item">
+              
+              <AuthorizeView Roles="Admin">
+                  <NavLink class="nav-link d-flex align-items-center" href="/applog" Match="NavLinkMatch.All">
+                    <span class="nav-icon fa fa-info-circle ml-2" aria-hidden="true"></span>
+
+                    <p class="ml-2">
+                    Application Log
+                  </p>
+                </NavLink>
+            </AuthorizeView>
+          </li>
+
+          <li class="nav-item">
+              
+              <AuthorizeView Roles="Admin">
+                  <NavLink class="nav-link d-flex align-items-center" href="/users" Match="NavLinkMatch.All">
+                    <span class="nav-icon fa fa-users ml-2" aria-hidden="true"></span>
+
+                    <p class="ml-2">
+                    User Accounts
+                  </p>
+                </NavLink>
+            </AuthorizeView>
+          </li>
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+
+    <AuthorizeView Roles="StoreAdmin">
+        <div class="sidebar-custom">
+            <a href="/details" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+        </div>
+    </AuthorizeView>
+    <!-- /.sidebar-custom -->
+  </aside>
+
+
+@code {
+  [Parameter]
+  public string username { get; set; }="User Name";
+}

@@ -1,0 +1,35 @@
+﻿@page "/storeNotExist"
+@using Serilog
+@layout StoreAdminLayoutT
+
+@inject IStoreRepo Store
+@inject NavigationManager Navigator
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+
+<h2>Look like you don't have a store :(</h2>
+<a class="btn btn-dark" href="/createStore">Create Store</a>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationState;
+
+
+            if (Store.GetStoreByAdminName(authState.User.Identity.Name) != null)
+            {
+                Navigator.NavigateTo("/store/dashboard");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while loading StoreNotExist component\n{ex}\n\n");
+        }
+
+    }
+
+}

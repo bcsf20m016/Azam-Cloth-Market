@@ -1,0 +1,64 @@
+﻿@using Serilog
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="deleteConfirmationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-disnuss="modal" aria-label="Close" @onclick="()=>OnConfirmationChange(false)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="()=>OnConfirmationChange(false)">
+                    Cancel
+                </button>
+                @if(isProcessing)
+                {
+                    <button type="button" class="btn btn-danger">Processing</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger" disabled="@(!enableDeleteButton)" @onclick="()=>OnConfirmationChange(true)">
+                    Delete
+                </button>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    public bool enableDeleteButton { get; set; } = true;
+    public bool isProcessing { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> CconfirmationChanged{ get; set; }
+    [Parameter]
+    public bool IsParentComponentProcessing { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        isProcessing = IsParentComponentProcessing;
+    }
+
+
+    protected async Task OnConfirmationChange(bool value)
+    {
+        try
+        {
+            enableDeleteButton = false;
+            if(value)
+            {
+                isProcessing = true;
+            }
+            await CconfirmationChanged.InvokeAsync(value);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing OnConfirmationChange function in DeleteConfirmationComponent component\n{ex}\n\n");
+        }
+
+    }
+}

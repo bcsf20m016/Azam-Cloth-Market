@@ -1,0 +1,56 @@
+2024-02-01 00:00:05.213 +05:00 [INF] The Application is starting
+
+
+2024-02-01 00:01:12.785 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 124
+
+
+2024-02-01 00:10:13.866 +05:00 [INF] The Application is starting
+
+
+2024-02-01 00:10:28.683 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 124
+
+
+2024-02-01 00:12:16.904 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 124
+
+
+2024-02-01 00:15:35.084 +05:00 [INF] The Application is starting
+
+
+2024-02-01 00:15:48.963 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 124
+
+
+2024-02-01 00:15:53.009 +05:00 [ERR] Error while executing OnAfterRenderAsync function in StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnAfterRenderAsync(Boolean firstRender) in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 175
+
+
+2024-02-01 00:31:00.477 +05:00 [INF] The Application is starting
+
+
+2024-02-01 00:31:57.359 +05:00 [ERR] Error while loading StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 127
+
+
+2024-02-01 00:35:40.295 +05:00 [INF] The Application is starting
+
+

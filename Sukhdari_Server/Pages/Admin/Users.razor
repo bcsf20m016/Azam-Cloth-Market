@@ -1,0 +1,85 @@
+﻿@page "/users"
+@layout StoreAdminLayoutT
+@inject IStoreRepo Store
+@inject IProductRepo Product
+@inject IUserIPRepo IpRepo
+@inject NavigationManager Navigator
+@inject IJSRuntime js
+@attribute [Authorize(Roles = Common.StaticDetails.Role_Admin)]
+
+<br />
+<h1>All Store Owners</h1>
+
+@if (stores != null && stores.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Store Name</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var store in stores)
+                {
+                    var emailTask = GetEmail(store.UserId);
+                    emailTask.Wait();
+                    <tr>
+                        <td>@store.Name</td>
+                        <td>@emailTask.Result</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => ConfirmDeleteUser(store.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p>No stores available.</p>
+}
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    private IEnumerable<StoreDTO> stores;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationState;
+        stores = await Store.getAllStores();
+    }
+
+    private async Task<String> GetEmail(string userId)
+    {
+        if (userId != null)
+        {
+            return await Store.getEmailByUserId(userId);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private async Task ConfirmDeleteUser(int storeId)
+    {
+        var confirmed = await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete?");
+
+        if (confirmed)
+        {
+            await DeleteUser(storeId);
+            // Refresh the store list
+            stores = await Store.getAllStores();
+        }
+    }
+
+    private async Task DeleteUser(int storeId)
+    {
+        await Store.deleteStore(storeId);
+    }
+}

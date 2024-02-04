@@ -1,0 +1,105 @@
+﻿@page "/admin/dashboard"
+@page "/admin"
+@layout StoreAdminLayoutT
+@inject IStoreRepo Store
+@inject ICategoryRepo Category
+@inject IProductRepo Product
+@inject IUserIPRepo IpRepo
+@inject NavigationManager Navigator
+@inject IJSRuntime js
+@attribute [Authorize(Roles = Common.StaticDetails.Role_Admin)]
+
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1>Welcome Admin</h1>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card-counter primary">
+                <i class="fa fa-code-fork"></i>
+                <span class="count-numbers">@storeCount</span>
+                <span class="count-name">Stores</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-counter info">
+                <i class="fa fa-users"></i>
+                <span class="count-numbers">15</span>
+                <span class="count-name">Customers</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-counter success">
+                <i class="fa fa-database"></i>
+                <span class="count-numbers">10</span>
+                <span class="count-name">Customers</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-counter danger">
+                <i class="fa fa-shopping-bag"></i>
+                <span class="count-numbers">10</span>
+                <span class="count-name">Orders</span>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="row col-md-12">
+    <div class="card card-danger col-md-12">
+        <div class="card-header">
+            <h3 class="card-title mb-0">Top Stores</h3>
+        </div>
+        <div class="card-body">
+            <RadzenChart>
+                <RadzenPieSeries Data=@storeClick Title="Clicks" CategoryProperty="storeName" ValueProperty="clicksCount">
+                </RadzenPieSeries>
+            </RadzenChart>
+        </div>
+    </div>
+</div>
+@code 
+{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    int storeCount;
+    int count = 0;
+    int? totalClickCount = 0;
+    class StoreClickCount
+    {
+        public string storeName { get; set; }
+        public int? clicksCount { get; set; }
+    }
+    List<StoreClickCount> storeClick = new List<StoreClickCount>();
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await AuthenticationState).User;
+        if (user.IsInRole("Admin"))
+        {
+            storeCount = await Store.getStoreCount();
+            var stores = await Store.getAllStores();
+            var topStores = stores.OrderByDescending(i => i.ClickCount).Take(5);
+            foreach(var store in topStores)
+            {
+                StoreClickCount temp = new StoreClickCount();
+                temp.storeName = store.Name;
+                if (store.ClickCount == null)
+                {
+                    temp.clicksCount = 1;
+                }
+                else
+                {
+                    temp.clicksCount = store.ClickCount;
+                }
+                storeClick.Add(temp);
+            }
+        }
+    }
+}

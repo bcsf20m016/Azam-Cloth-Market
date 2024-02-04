@@ -1,0 +1,110 @@
+﻿@page "/profile"
+@using Serilog
+@layout StoreAdminLayoutT
+@inject IStoreRepo Store
+@inject NavigationManager Navigator
+@inject IJSRuntime JsRuntime
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+
+<div class="card card-info mt-2">
+    <div class="card-header">
+        <div class="card-header">
+            <div class="card-title float-left pt-2">
+                <h3>Store Details</h3>
+            </div>
+            <div class="d-flex float-right">
+                <a href="/details">
+                    <button class="btn btn-info text-white">
+                        <span class="oi oi-pencil mr-0 mr-md-2" />
+                        <h5 class="d-md-inline-block d-none pt-1">Edit Info</h5>
+                    </button>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+        <h2>Basic Info:</h2>
+        <div class="m-4">
+            
+            <h3>Display Name: @StoreDetails.Name</h3>
+            <h3>Store Type: @StoreDetails.Type</h3>
+        </div>
+       
+        <div class="m-4 float-lg-right">
+           <h2>Location</h2>
+           <h3>Address: @StoreDetails.Address</h3>
+           <h3>Country: @StoreDetails.Country</h3>
+       </div>
+
+        <h2>Contact Info:</h2>
+       <div class="m-4">
+           
+           <h3>Phone No# @StoreDetails.phoneNo</h3>
+           <h3>Email# @StoreAdmin</h3>
+       </div>
+
+       
+       
+       <h2>Store Featured Images</h2>
+        <div class="row">
+            @if (StoreDetails.ImageUrls != null && StoreDetails.ImageUrls.Count > 0)
+            {
+                int no = 1;
+                foreach (var image in StoreDetails.ImageUrls)
+                {
+                    <div class="col-md-3 mt-3">
+                        <div style="object-fit: cover;">
+                            <span class="badge badge-danger">@no</span>
+                            <img src="@image" alt="Store Image" style="width: 10rem;height: 10rem;object-fit: cover;">
+                        </div>
+
+
+                    </div>
+                    no += 1;
+                }
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    private StoreDTO StoreDetails { get; set; } = new StoreDTO();
+    private String StoreAdmin { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationState;
+
+            var store = Store.GetStoreByAdminName(authState.User.Identity.Name);
+
+            if (Store.GetStoreByAdminName(authState.User.Identity.Name) == null)
+            {
+                Navigator.NavigateTo("/storeNotExist");
+            }
+            else
+            {
+                StoreDetails = store;
+                StoreAdmin = authState.User.Identity.Name;
+                if (store.StoreImages != null)
+                {
+                    store.ImageUrls = store.StoreImages.Select(i => i.StoreImageUrl).ToList();
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while loading InfoPreview component\n{ex}\n\n");
+        }
+
+    }
+
+}

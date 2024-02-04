@@ -1,0 +1,118 @@
+﻿@page "/addtype"
+@page "/type/update/{Id:int}"
+@using System.IO
+@using Sukhdari_Server.Service.IService
+@inject IJSRuntime JsRuntime
+@layout StoreAdminLayoutT
+@inject ITagTypeRepo TagType
+@inject ITagRepo Tag
+@inject NavigationManager Navigator
+@attribute [Authorize(Roles = Common.StaticDetails.Role_Admin)]
+
+<div class="card card-info">
+    <div class="card-header">
+        <div class="card-title float-left pt-2">
+            <h3>@Title</h3>
+        </div>
+    </div>
+    
+    
+
+    <EditForm Model="TagTypeDetails" OnValidSubmit="SaveType" class="form-horizontal">
+        <div class="card-body">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="product_name">Type Name</label>
+                <div class="col-md-7">
+                    <InputText @bind-Value="TagTypeDetails.name" placeholder="TYPE NAME" class="form-control input-md" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="tags">Type Tags</label>
+                <div class="col-md-7">
+                    <InputTextArea @bind-Value="tags" class="form-control input-md" name="tags" placeholer="Enter comma seprated tags">
+                    </InputTextArea>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="submit" class="btn btn-info">@btnName</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+
+   
+    
+</div>
+
+@code {
+    private string Title { get; set; } = "Add Type";
+    private string btnName { get; set; } = "Save Type";
+    private string message { get; set; } = "Type Added Successfully";
+    public string tags { get; set; } = "";
+    [Parameter]
+    public int? Id { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    public TagTypeDTO TagTypeDetails { get; set; } = new TagTypeDTO();
+    public IEnumerable<TagDTO> Tags { get; set; }
+    public List<string> tagsName = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    { 
+
+        if (Id != null)
+        {
+            //updating
+            Title = "Update Type";
+            btnName = "Update Type";
+            var type = await TagType.GetTagType(Id.Value);
+            TagTypeDetails = type;
+            Tags = await Tag.getAllTagsWithSpecificType(Id.Value);
+            foreach(var tag in Tags)
+            {
+                tags += tag.Name + ',';
+                tagsName.Add(tag.Name);
+            }
+        }
+
+    }
+
+    private async void SaveType()
+    {
+
+        await TagType.createTagType(TagTypeDetails);
+        int id = TagType.GetTagType(TagTypeDetails.name);
+        string tag="";
+        tags = tags + ',';
+
+        foreach(var str in tags)
+        {
+            if(str != ',' )
+            {
+                tag = tag + str;
+            }
+            else
+            {
+                if (!tagsName.Contains(tag))
+                {
+                    TagDTO TagNew = new TagDTO();
+                    TagNew.Name = tag;
+                    TagNew.tagTypeId = id;
+                    await Tag.createTag(TagNew);
+                    
+                }
+                tag = "";
+            }
+
+        }
+        JsRuntime.ToastrSuccess("Tags Added Successfully");
+        Navigator.NavigateTo("/types");
+        //return;
+    }
+}

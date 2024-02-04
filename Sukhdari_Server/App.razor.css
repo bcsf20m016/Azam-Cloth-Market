@@ -1,0 +1,6 @@
+﻿.centerlized {
+    position: absolute;
+    top: 40%;
+    left: 0%;
+    transform:translate(0,-40%);
+}

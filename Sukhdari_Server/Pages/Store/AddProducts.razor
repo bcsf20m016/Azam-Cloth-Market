@@ -1,0 +1,560 @@
+﻿@page "/addProductsInBulk"
+@inject IStoreRepo Store
+@inject ICategoryRepo Category
+@inject IProductRepo Product
+@inject IProductImageRepo productImageRepo
+@using System.IO
+@using Serilog
+@using Sukhdari_Server.Service.IService
+@using CsvHelper
+@using System.Globalization
+@using System.Text.RegularExpressions
+@using System.Text;
+@inject IImageUpload imageUplaod
+@inject NavigationManager Navigator
+@inject IJSRuntime JsRuntime
+@layout StoreAdminLayoutT
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+
+
+
+
+<div class="card card-info mt-3">
+    <div class="card-header">
+        <div class="card-title float-left pt-2">
+            <h3>Add Products In Bulk</h3>
+        </div>
+    </div>
+    @* //-----------------MyCode started------------------------*@
+    @* Select Category *@
+    <div class="card-body">
+        <EditForm Model="ProductDetails" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="product_categorie">PRODUCT CATEGORY</label>
+                <div class="col-md-7">
+                    @* <InputSelect @bind-Value="ProductDetails.CategoryId" class="form-control" @oninput="HandleCategoryChange"> *@
+                    <InputSelect @bind-Value="selected_category" TValue="string" class=" form-control" @oninput="HandleCategoryChange">
+                        <option value="">Select category</option>
+                        @foreach (var category in Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </InputSelect>
+                    @* <ValidationMessage For="()=>ProductDetails.CategoryId"></ValidationMessage> *@
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    @* //------------------My Code Ended------------------------*@
+
+
+    <div class="card-body">
+        @if (selected_category != null && selected_category != "")
+        {
+            <div>
+                <span>Product Bulk Upload CSV Template</span>
+                @* <a href="/Format//BulkProductsTemplate.csv" class="btn btn-outline-success" download>Download Csv Template</a> *@
+                <a href="/Format//BulkProductsTemplate.csv" class="btn btn-outline-success" download>Download Csv Template</a>
+            </div>
+            <div class="mt-5">
+                <span>Product Details CSV File</span>
+                <InputFile OnChange="@HandleCSVFileUpload" accept=".csv" class="form-control"></InputFile>
+            </div>
+            <div class="mt-5">
+                <span><h3>Product Images</h3></span>
+                <InputFile OnChange="@HandleImageUpload" multiple accept=".jpg,.jpeg,.png" class="form-control"></InputFile>
+                <div class="note mt-2">
+                    <strong class="d-block mb-2"><em>Note:</em></strong>
+                    <ol class="ml-4" style="font-weight: normal; color: Gray; font-size: 0.7em; FONT-FAMILY: open_sansregular, Verdana,Arial, Helvetica, sans-serif; font-style:italic">
+                        <li>Valid image formats are .jpg, .jpeg, .png</li>
+                        <li>The size of each image must not exceed 250 KB, <br> else it'll be discarded</li>
+                    </ol>
+                </div>
+            </div>
+            <button @onclick="@addProductsInBulk" class="btn btn-primary mt-3" disabled="@(!AreAllImagesUploaded)">Add</button>
+            @if (errorFileButtonFlag == 1)
+            {
+                <div class="mt-5">
+                    <span>Products failed to add</span>
+                    <a href="/Format//ProductsFailed.csv" class="btn btn-outline-success" download>Download</a>
+                </div>
+            }
+            @if (errorImageButtonFlag == 1)
+            {
+                <div class="mt-5">
+                    <span>Images failed to add</span>
+                    <a href="/Format//FailedImages.csv" class="btn btn-outline-success" download>Download</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    public IEnumerable<CategoryDTO> Categories { get; set; }
+    // myCode Start
+    public bool AreAllImagesUploaded { get; set; } = true;
+    public int errorFileButtonFlag = 0;
+    public int errorImageButtonFlag = 0;
+    public CategoryDTO CategoryDetails { get; set; } = new CategoryDTO();
+    private List<CategoryAttributesDTO> Attributes = new List<CategoryAttributesDTO>();
+    public string selected_category = null;
+    public CategoryDTO cat { get; set; }
+    public ProductDTO ProductDetails { get; set; } = new ProductDTO();
+    public List<string> commonAttributes = new List<string> { "Product_Name", "Product_Price", "Discount_Percentage", "Available_Quantity", "Product_Description", "Product_Images" };
+    public List<string> columnsInCSV = new List<string>();
+    //myCode End
+    public bool fileUploaded { get; set; } = false;
+    IReadOnlyList<IBrowserFile> uploadedImages;
+    IBrowserFile productDetailsCSV;
+    List<string[]> productsCsv = new List<string[]>();
+    int store_id;
+    IDictionary<string, IBrowserFile> productImagesHash = new Dictionary<string, IBrowserFile>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationState;
+
+            var store = Store.GetStoreByAdminName(authState.User.Identity.Name);
+            if (store == null)
+            {
+                Navigator.NavigateTo("/storeNotExist");
+            }
+            else
+            {
+                store_id = store.Id;
+                Categories = await Category.GetAllCategories(store.Id);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while loading AddProducts component\n{ex}\n\n");
+        }
+
+
+    }
+    //-----------------My code Started to select specific category---------------------
+    private void HandleCategoryChange(ChangeEventArgs e)
+    {
+        try
+        {
+            int selectedCategoryId;
+
+
+            if (int.TryParse(e.Value.ToString(), out selectedCategoryId))
+            {
+                cat = Categories.FirstOrDefault(i => i.Id == selectedCategoryId);
+                Attributes = cat.Attributes;
+            }
+            if (Attributes != null)
+            {
+                columnsInCSV.Clear();
+                columnsInCSV.AddRange(commonAttributes);
+                foreach (var attrib in Attributes)
+                {
+                    columnsInCSV.Add(attrib.Key.ToString());
+                }
+
+            }
+
+
+            var csvContent = new StringBuilder();
+
+            var columnsLine = string.Join(",", columnsInCSV);
+            csvContent.AppendLine(columnsLine);
+
+
+            // Path to the wwwroot/Format directory
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Format");
+
+            // Ensure the directory exists
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Path to the BulkProductsTemplate.csv file
+            //var filePath = Path.Combine(directoryPath, "BulkProductsTemplate.csv");
+            var filePath = Path.Combine(directoryPath, "BulkProductsTemplate.csv");
+            // Write the CSV content to the file
+            File.WriteAllTextAsync(filePath, csvContent.ToString());
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleCategoryChange function in AddProducts component\n{ex}\n\n");
+        }
+
+
+
+    }
+    //---------------------My code Ended-------------------------
+    public async Task HandleCSVFileUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            string fileExtension = Path.GetExtension(e.File.Name);
+            if(fileExtension.ToLower() != ".csv")
+            {
+                await JsRuntime.ToastrError("Kindly upload valid CSV file");
+                return;
+            }
+
+            //---(Start)---If failed product file exists then clear the contects of this file before adding the new products.
+            var ErrorFileContentClear = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Format", "ProductsFailed.csv");
+            if (File.Exists(ErrorFileContentClear))
+            {
+                errorFileButtonFlag = 0;
+                System.IO.File.WriteAllText(ErrorFileContentClear, string.Empty);
+
+            }
+            //----(End)------If failed product file exists then clear the contects of this file before adding the new products.
+
+            fileUploaded = true;
+            var singleFile = e.File;
+            var stream = singleFile.OpenReadStream();
+            productsCsv = new List<string[]>();
+            MemoryStream ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            stream.Close();
+
+            var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
+
+            foreach (var item in outputFileString.Split(Environment.NewLine))
+            {
+                productsCsv.Add(SplitCSV(item.ToString()));
+            }
+            //removing the last empty row
+            var lastRow = productsCsv[productsCsv.Count - 1];
+            productsCsv.Remove(lastRow);
+
+            await JsRuntime.ToastrSuccess("Read");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleCSVFileUpload function in AddProducts component\n{ex}\n\n");
+        }
+
+    }
+
+    //e.File.op
+    private string[] SplitCSV(string input)
+    {
+        List<string> list = new List<string>();
+        try
+        {
+            //Excludes commas within quotes
+            Regex csvSplit = new Regex("(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)", RegexOptions.Compiled);
+            string curr = null;
+            foreach (Match match in csvSplit.Matches(input))
+            {
+                curr = match.Value;
+                if (0 == curr.Length) list.Add("");
+
+                list.Add(curr.TrimStart(','));
+            }
+  
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing SplitCSV function in AddProducts component\n{ex}\n\n");
+        }
+        return list.ToArray();
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            //Erasing the existing file content
+            var ErrorFileContentClear = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Format", "FailedImages.csv");
+            if (File.Exists(ErrorFileContentClear))
+            {
+                errorImageButtonFlag = 0;
+                System.IO.File.WriteAllText(ErrorFileContentClear, string.Empty);
+
+            }
+
+            AreAllImagesUploaded = false;
+
+            uploadedImages = e.GetMultipleFiles(1000);
+
+            // StringBuilder to store CSV content
+            var csvContent = new StringBuilder();
+            csvContent.AppendLine("\"Product_Name\",\"Error\"");
+
+            // List to store information about invalid images
+            List<string> invalidImages = new List<string>();
+
+            foreach (var image in uploadedImages)
+            {
+                if (image.Size / 1024 <= 250)
+                {
+                    string fileExtension = Path.GetExtension(image.Name);
+                    if (fileExtension.ToLower() == ".jpg" || fileExtension.ToLower() == ".png" || fileExtension.ToLower() == ".jpeg")
+                    {
+                        if (!productImagesHash.ContainsKey(image.Name))
+                            productImagesHash.Add(image.Name, image);
+                    }
+                    else
+                    {
+                        errorImageButtonFlag = 2;
+                        invalidImages.Add($"{image.Name},Invalid Format");
+                    }
+                }
+                else
+                {
+                    errorImageButtonFlag = 2;
+                    invalidImages.Add($"{image.Name},File size exceeds 250 KB");
+                }
+            }
+
+            // Append invalid image information to CSV content
+            csvContent.AppendLine(string.Join(Environment.NewLine, invalidImages));
+
+            // Directory path
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Format");
+
+            // Create the directory if it doesn't exist
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // File path
+            var filePath = Path.Combine(directoryPath, "FailedImages.csv");
+
+            // Write CSV content to the file
+            File.WriteAllText(filePath, csvContent.ToString());
+
+            AreAllImagesUploaded = true;
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleImageUpload function in AddProducts component\n{ex}\n\n");
+        }
+
+    }
+
+    private async Task addProductsInBulk()
+    {
+        try
+        {
+            if (fileUploaded == false)
+            {
+                await JsRuntime.ToastrError("Kindly upload the product file first.");
+                return;
+            }
+
+
+
+            AreAllImagesUploaded = false;
+
+            string errorMsg = "";
+
+            //--------------Code to create a csv file for not added products-----------------------
+            var csvContent = new StringBuilder();
+            csvContent.AppendLine("\"Product_Name\",\"Error\"");
+            // var columnsLine = string.Join(",", columnsInCSV);
+            // csvContent.AppendLine(columnsLine);
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Format");
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+            var filePath = Path.Combine(directoryPath, "ProductsFailed.csv");
+
+            //await File.WriteAllTextAsync(filePath, csvContent.ToString());
+
+            //---------------Code end here for csv file creation for failed products--------------------------------------
+            if (productsCsv.Count() > 0)
+            {
+                int index = 0;
+                foreach (var product in productsCsv)
+                {
+
+                    //int nullFlag = 0; // to handle null fields
+                    var newProduct = new ProductDTO();
+                    if (index++ == 0 || product == null || product.Count() <= 0)
+                    {
+                        continue;
+                    }
+                    //----------------
+                    if (product.Any(field => field == null || (field is string && string.IsNullOrEmpty((string)field))))
+                    {
+                        errorFileButtonFlag = 1;
+                        errorMsg = "Empty fields are not allowed.";
+                        errorMsg = errorMsg.Replace("\"", "\"\"");
+
+                        csvContent.AppendLine($"\"{product[0]}\",\"{errorMsg}\"");
+                        await File.WriteAllTextAsync(filePath, csvContent.ToString());
+                        errorMsg = "";
+                        continue;
+                    }
+                    //--------------
+                    var productDTO = new ProductDTO();
+                    try
+                    {
+
+                        // var cat = Categories.FirstOrDefault(i => i.Name.ToLower() == selected_category.ToLower());
+                        productDTO.CategoryId = cat.Id;
+                        productDTO.Name = product[0];
+                        productDTO.Price = float.Parse(product[1]);
+                        productDTO.DiscountPercentage = float.Parse(product[2]);
+                        productDTO.Quantity = int.Parse(product[3]);
+                        productDTO.Description = product[4];
+                        productDTO.ClickCount = 0;
+                        productDTO.StoreId = store_id;
+
+                        // foreach(var item in product)
+                        // {
+                        //     if (item == "" || item == null || (item is string && string.IsNullOrEmpty((string)item)))
+                        //     {
+                        //         nullFlag--;
+                        //     }
+                        // }
+
+                        int i = 6;
+                        foreach (var attrb in Attributes)
+                        {
+                            var attrib = new ProductAttributesDTO { Key = attrb.Key, Value = product[i++], Fixed = true };
+                            if (productDTO.Attributes == null)
+                            {
+                                productDTO.Attributes = new List<ProductAttributesDTO>();
+                                productDTO.Attributes.Add(attrib);
+                            }
+                            else
+                            {
+                                productDTO.Attributes.Add(attrib);
+                            }
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                    }
+
+                    try
+                    {
+                        if (productDTO.Price > 0 && productDTO.DiscountPercentage >= 0 && productDTO.DiscountPercentage <= 100 && productDTO.Quantity > 0)
+                        {
+                            newProduct = await Product.createProduct(productDTO);
+                        }
+                        else
+                        {
+                            errorFileButtonFlag = 1;
+                            if (productDTO.Price <= 0)
+                            {
+                                //await JsRuntime.ToastrError("Product price must be graeter than zero.");
+                                errorMsg = errorMsg + "Product price must be greater than zero. ";
+                            }
+                            else if (productDTO.DiscountPercentage < 0 || productDTO.DiscountPercentage > 100)
+                            {
+                                //await JsRuntime.ToastrError("Discount Percentage must be between 0 and 100.");
+                                errorMsg = errorMsg + "Discount Percentage must be between 0 and 100. ";
+                            }
+                            else if(productDTO.Quantity < 1)
+                            {
+                                //await JsRuntime.ToastrError("Product quantity must be graeter than zero.");
+                                errorMsg = errorMsg + "Product quantity must be greater than zero. ";
+                            }
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        if (newProduct.Name != null)
+                        {
+
+                            await JsRuntime.ToastrWarning("Error Adding product with Name: " + productDTO.Name);
+                        }
+                        else
+                        {
+
+                            await JsRuntime.ToastrError("Error adding some product!");
+                        }
+
+                    }
+                    if (newProduct == null)
+                    {
+                        errorFileButtonFlag = 1;
+                        //await JsRuntime.ToastrWarning("Product Already Exists");
+                        errorMsg = errorMsg + "Product Already Exists.";
+
+                    }
+                    else if (productDTO.Price > 0 && productDTO.DiscountPercentage >= 0 && productDTO.DiscountPercentage <= 100 && productDTO.Quantity > 0)
+                    {
+                        //await JsRuntime.ToastrSuccess($"Product {productDTO.Name} Added Successfully");
+
+                        try
+                        {
+                            var productImagesNames = product[5].Split(":");
+                            if (productImagesNames != null && productImagesNames.Count() > 0)
+                            {
+                                foreach (var product_image_name in productImagesNames)
+                                {
+                                    if (productImagesHash.ContainsKey(product_image_name))
+                                    {
+
+                                        var image_url = await imageUplaod.uploadImage(productImagesHash[product_image_name]);
+                                        await productImageRepo.CreateProductImage(new ProductImageDTO()
+                                        {
+                                            ProductId = newProduct.Id,
+                                            ProductImageUrl = image_url
+                                        });
+                                    }
+
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            //errorFileButtonFlag = 1;
+                            await JsRuntime.ToastrError($"Error Uploading pictures for {productDTO.Name}!");
+                            errorMsg = errorMsg + "Error with pictures Uploading. Only .png,.jpg and.jpeg extensions are supported for image files. Multiple image files must be separated by colon(:)";
+                        }
+
+                    }
+
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        errorMsg = errorMsg.Replace("\"", "\"\"");
+
+                        csvContent.AppendLine($"\"{productDTO.Name}\",\"{errorMsg}\"");
+                        await File.WriteAllTextAsync(filePath, csvContent.ToString());
+                    }
+                    errorMsg = "";
+
+                }
+                if (errorFileButtonFlag == 0)
+                {
+                    await JsRuntime.ToastrSuccess("Products added successfully.");
+                }
+                else
+                {
+                    await JsRuntime.ToastrError("Some products failed to upload.");
+                }
+                if(errorImageButtonFlag == 2)
+                {
+                    errorImageButtonFlag = 1;
+                    await JsRuntime.ToastrError("Some Product Images failed to upload.");
+                }
+            }
+            else
+            {
+                await JsRuntime.ToastrError("Some Error Occured.Check valid CSV is uploaded!");
+            }
+            AreAllImagesUploaded = true;
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing addProductsInBulk function in AddProducts component\n{ex}\n\n");
+        }
+
+    }
+}

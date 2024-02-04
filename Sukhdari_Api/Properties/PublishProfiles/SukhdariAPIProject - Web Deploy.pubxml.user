@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAMQnlzKy780auLoJeuVXIGgAAAAACAAAAAAAQZgAAAAEAACAAAADX7q7BapszEUkBNLjokmbXyY1DBoVEMLW3n7RRJgQS7AAAAAAOgAAAAAIAACAAAACYUfU5KJv9WqmfSPtBTMFxKePqLZTXSs1DauFOmOxIQoAAAAApLzrpeRPCHyupzlP+g27R8AZOPBhpRII0hAdXBSz0urKqB7HhhQktEHK5lv4cxItAsEqA1O+MKJ+0diA3Z+AeRtHDYx1ojRjmRc4s+BcFXNjsUUHLmT2uuhmWAX0i4n73M+ISVkqnDTVvFxoZZUCAxCS1DC8G2yDQlnDveS2HukAAAAAnMNTtV9BmfKPSObdFzniXRWvAcHhnT7xQ55he8sGCUKatSr/OahpSWWLi1zDpTP3ZjejVgds5irkoS39b89g/</EncryptedPassword>
+    <History>True|2023-09-07T14:27:52.1506599Z;True|2023-09-07T18:12:58.9901333+05:00;True|2023-09-07T16:44:29.1333878+05:00;True|2023-09-07T16:20:06.6080488+05:00;True|2023-09-07T12:01:23.2477816+05:00;True|2023-09-07T11:57:28.9691480+05:00;True|2023-09-07T11:55:00.5524834+05:00;True|2023-09-07T11:50:27.4342669+05:00;False|2023-09-07T11:47:48.5419939+05:00;True|2023-09-07T10:59:33.4224107+05:00;True|2023-09-07T10:55:35.0508129+05:00;True|2023-09-07T10:45:34.4849973+05:00;True|2023-09-07T10:41:34.4668600+05:00;True|2023-09-07T10:30:31.6691774+05:00;True|2023-09-07T09:59:28.2593099+05:00;True|2023-09-07T09:54:21.9900057+05:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=tcp:sukhdari-apidbserver.database.windows.net,1433%3bInitial Catalog=Sukhdari_Api_db%3bPersist Security Info=False%3bUser ID=SukhdariAdmin%3bPassword=Sukhdari123%40%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

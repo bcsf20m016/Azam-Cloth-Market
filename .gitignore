@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Business
+/Common
+/DataAccess
+/Models
+/Sukhdari_Api/bin
+/Sukhdari_Api/obj
+/Sukhdari_Client/bin
+/Sukhdari_Client/obj
+/Sukhdari_Server/bin
+/Sukhdari_Server/obj

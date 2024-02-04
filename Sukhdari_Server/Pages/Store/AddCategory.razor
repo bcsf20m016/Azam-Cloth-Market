@@ -1,0 +1,235 @@
+﻿@page "/addCategory"
+@page "/category/update/{Id:int}"
+@page "/category/delete/{Id:int}"
+@using Serilog
+@layout StoreAdminLayoutT
+@inject IStoreRepo Store
+@inject ICategoryRepo Category
+@inject NavigationManager Navigator
+@inject IJSRuntime JsRuntime
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+
+
+<div class="card card-info">
+    <div class="card-header">
+        <div class="card-title float-left pt-2">
+            <h3>@Title</h3>
+        </div>
+       
+    </div>
+
+    <EditForm Model="CategoryDetails" OnValidSubmit="SaveCategory" class="form-horizontal">
+        <div class="card-body">
+
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="category_name">CATEGORY NAME</label>
+                <div class="col-md-7">
+                    <InputText @bind-Value="CategoryDetails.Name" placeholder="Category Name" class="form-control input-md" />
+                    <ValidationMessage For="()=>CategoryDetails.Name"></ValidationMessage>
+
+                </div>
+            </div>
+
+            @if (btnName == "Update Category")
+            {
+                <div class="form-group">
+                    <label class="col-md-7 control-label" for="discount percentage">Discount Percentage</label>
+                    <div class="col-md-7">
+                        <InputNumber @bind-Value="@CategoryDetails.DiscountPercentage" placeholder="Discount Percentage" class="form-control" />
+                        <ValidationMessage For="()=>CategoryDetails.DiscountPercentage"></ValidationMessage>
+
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="category_description">CATEGORY DESCRIPTION</label>
+                <div class="col-md-7">
+                    <InputTextArea @bind-Value="CategoryDetails.Description" class="form-control" />
+                    <ValidationMessage For="()=>CategoryDetails.Description"></ValidationMessage>
+
+                </div>
+            </div>
+
+            @*New Code Starts from here of adding Dynamic Fields*@
+            @if (CategoryDetails.Attributes != null && CategoryDetails.Attributes.Count > 0)
+            {
+                @foreach (var attrib in CategoryDetails.Attributes)
+                {
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <InputText id="AttributeKey" @bind-Value="attrib.Key" placeholder="NAME" class="form-control input-md" /> <!nbsp></!nbsp>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-danger" @onclick="()=>CategoryDetails.Attributes.Remove(attrib)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                }
+            }
+
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="button" class="btn btn-info" @onclick="AddAttribute">Add Attribute</button>
+                </div>
+            </div>
+            @*New Code Ends here*@
+
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="submit" class="btn btn-info text-white">@btnName</button>
+
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+
+@code {
+    private String Title { get; set; } = "Add Category";
+    private String btnName { get; set; } = "Add Category";
+    private bool IsProcessing { get; set; } = false;
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    public CategoryDTO CategoryDetails { get; set; } = new CategoryDTO();
+
+    public String StoreName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationState;
+
+            var store = Store.GetStoreByAdminName(authState.User.Identity.Name);
+            if (store == null)
+            {
+                Navigator.NavigateTo("/storeNotExist");
+            }
+            else
+            {
+                CategoryDetails.StoreId = store.Id;
+                if (!authState.User.IsInRole(Common.StaticDetails.Role_StoreAdmin))
+                {
+                    var uri = new Uri(Navigator.Uri);
+                    Navigator.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}");
+                }
+                if (Id != null)
+                {
+                    //updating
+                    Title = "Update Category";
+                    btnName = "Update Category";
+                    var category = await Category.GetCategory(Id.Value, CategoryDetails.StoreId);
+                    CategoryDetails = category;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while loading AddCategory component\n{ex}\n\n");
+        }
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing OnAfterRenderAsync function in AddCategory component\n{ex}\n\n");
+        }
+
+    }
+
+    private async void SaveCategory()
+    {
+        try
+        {
+            var ans =  await Category.createCategory(CategoryDetails);
+            string message = "Category Added Successfully";
+            if(ans ==0 && CategoryDetails.Id==0) 
+            {
+                message = "Category with same name already exist";
+                await JsRuntime.ToastrWarning(message);
+                return;
+            }
+
+            else if(CategoryDetails.Id !=0)
+            {
+                message = "Category Updated Successfully"; 
+            }
+            CategoryDetails.Name = "";
+            CategoryDetails.Description = "";
+            StateHasChanged();
+            Navigator.NavigateTo("/category");
+            await JsRuntime.ToastrSuccess(message);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing SaveCategory function in AddCategory component\n{ex}\n\n");
+        }
+    }
+    private async void DeleteCategory()
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing DeleteCategory function in AddCategory component\n{ex}\n\n");
+        }
+
+    }
+    private async void DeleteCategory2(bool isConfirmed)
+    {
+        try
+        {
+            if (isConfirmed)
+            {
+                await Category.deleteCategory(Id.Value);
+                StateHasChanged();
+                Navigator.NavigateTo("/category");
+                await JsRuntime.ToastrSuccess("Category Deleted Successfully");
+            }
+            await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+            IsProcessing = false;
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing DeleteCategory2 function in AddCategory component\n{ex}\n\n");
+        }
+
+    } 
+
+    public void AddAttribute()
+    {
+        try
+        {
+            if (CategoryDetails.Attributes == null)
+            {
+                CategoryDetails.Attributes = new List<CategoryAttributesDTO>();
+                CategoryDetails.Attributes.Add(new CategoryAttributesDTO());
+            }
+            else
+            {
+                CategoryDetails.Attributes.Add(new CategoryAttributesDTO());
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing AddAttribute function in AddCategory component\n{ex}\n\n");
+        }
+
+    }
+}

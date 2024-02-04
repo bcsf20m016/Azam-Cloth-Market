@@ -1,0 +1,15 @@
+﻿.storeLink {
+    color: dimgray;
+    padding-right:1%;
+    text-decoration: none;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient( to right, black, black 50%, dimgray 50%);
+    background-size: 200% 100%;
+    background-position: 100%;
+}
+
+    .storeLink:hover {
+        transition: all 0.3s cubic-bezier(0.000, 0.000, 0.230, 1);
+        background-position: 0%;
+    }

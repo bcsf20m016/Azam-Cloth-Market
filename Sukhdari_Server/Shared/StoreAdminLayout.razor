@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+@attribute [Authorize]
+    <AuthorizeView>
+        <Authorized>
+            <div class="page">
+                <div class="sidebar">
+                    <NavMenu />
+                </div>
+
+                <div class="main">
+                    <div class="top-row px-4">
+                        <h5>@context.User.Identity.Name</h5>
+                        <a class="btn btn-dark" href="/Identity/Account/Logout">Log Out</a>
+                    </div>
+
+                    <div class="content px-4">
+                        @Body
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>

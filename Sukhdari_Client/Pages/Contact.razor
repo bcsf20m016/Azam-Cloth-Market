@@ -1,0 +1,44 @@
+﻿@page "/stores/contact/{StoreId:int}"
+@layout StoreLayout
+@inject IStoreService Store
+
+<div class="col-11 card m-5">
+    <div class="col-12 m-2">
+        <a href="@($"stores/store/{StoreId}")">
+            <h1 class="text-dark oi oi-circle-x"></h1>
+        </a>
+    </div>
+
+
+        @if(Stores!=null)
+        {
+            <div class="">
+                <h1>Phone #</h1>
+                <p>@Stores.phoneNo</p>
+
+                <h1>Email</h1>
+                <p>@email</p>
+                <h1>Location</h1>
+                <p>@Stores.Address</p>
+
+            </div>
+        }
+
+
+</div>
+
+@code
+{
+    [Parameter]
+    public int StoreId { get; set; }
+
+    private StoreDTO Stores;
+    public string email { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Stores = await Store.GetStoreByIdAsync(StoreId);
+        email = await Store.getEmailByUserId(Stores.UserId);
+    }
+
+}

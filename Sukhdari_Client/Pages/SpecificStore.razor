@@ -1,0 +1,494 @@
+@page "/stores/store/{Id:int}"
+@layout StoreLayout
+@inject IStoreService Store
+@inject IUserIpService userIp
+@inject Microsoft.Extensions.Configuration.IConfiguration config
+@inject IJSRuntime JSRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+
+@*<h1>@ipAddress.IP</h1>
+<h1>@ipAddress.timeNow</h1>*@
+
+@*search bar*@
+<div class="bg-light p-3 col-12">
+    <div class="ml-4 row">
+        <input @bind-value="SearchProduct" @bind-value:event="oninput" @onkeyup="@searchProductResults" class="form-control col-7 shadow-none border-dark"/>
+        <a href="@($"/stores/about/{Id}")" class="btn btn-primary col-2 ml-2">About</a>
+        <a href="@($"/stores/contact/{Id}")" class="btn btn-primary col-2 ml-2">Contact</a>
+        
+    </div>
+</div>
+
+<div class="row m-0">
+    <div class="card bg-light col-2 m-2 p-2 filterDiv" style="left:1% ">
+        @if (Products != null && Products.Any())
+        {
+            <h4>Filters</h4>
+            <hr />
+
+            <h5>PRICE</h5>
+            <div class="ml-2 row">
+                <input type="number" class="col-5 p-0 mr-1" @bind-value="min" />
+                <input type="number" class="col-5 p-0" @bind-value="max" />
+            </div>
+            <div>
+                <br />
+                <div class="ml-2">
+                    <button class="btn btn-primary" type="submit" @onclick="findProductsByPrice">Search</button>
+                </div>
+            </div>
+            <hr />
+
+            <h5>Categories</h5>
+            <div class="form-check ml-2">
+                <form id="Categories">
+                    @if (allCategories != null && allCategories.Any())
+                    {
+                        @foreach (var category in allCategories)
+                        {
+                            <input class="form-check-input" type="radio" name="categoryRadioButton" @onchange="@(async ()=> await CategoryCheckboxClicked(category.Id))">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                @category.Name
+                            </label>
+                             <br /> 
+                        }
+                    }
+                    <br>
+                    <input class="btn btn-primary" type="reset" value="Reset Filter" @onclick="ResetCategories">
+                </form>
+            </div>
+           <hr />
+
+          @*  ---- My Code---- *@
+            @if (Attributes != null && Attributes.Count>0)
+            {
+                <form id="CategoryAttributes">
+                    @foreach (var catAttrib in Attributes)
+                    {
+                        <h5>@catAttrib.Key</h5>
+                        <div class="form-check ml-2">
+                            @foreach (var prod in CategoryAttributesProducts)
+                            {
+                                @foreach(var attrib in prod.Attributes)
+                                {
+                                    if(attrib.Key.ToLower() == catAttrib.Key.ToLower())
+                                    {
+                                        if (!attributeValues.Contains(attrib.Value.ToLower()))
+                                        {
+                                            <input class="form-check-input" type="checkbox" @onchange="@(async (e)=> await HandleAttributesCheckBox(attrib.Key, attrib.Value, e.Value))">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                @attrib.Value.ToUpper()
+                                            </label>
+                                            <br />
+                                            attributeValues.Add(attrib.Value.ToLower());
+                                        }
+                                    }
+                                }  
+                            }
+                        
+                        </div>
+                    }
+                    <br>
+                    <input class="btn btn-success" type="reset" value="Reset Attributes" @onclick="ResetAttributes">
+                </form>
+                attributeValues.Clear(); 
+                <hr />
+            }
+            
+           
+            <h5>Discount</h5>
+            <div class="form-check ml-2">
+                @if(checkBoxIndex[0] == 0)
+                {
+                    <input type="checkbox" class="form-check-input" @onchange="@((e) => DiscountCheckboxClicked(25, 0, e.Value))" >
+                    <label class="form-check-label">Upto 25%</label><br />
+                }
+                else if(checkBoxIndex[0] == 1)
+                {
+                    <input type="checkbox" class="form-check-input" @onchange="@((e) => DiscountCheckboxClicked(25, 0, e.Value))" checked>
+                    <label class="form-check-label">Upto 25%</label><br />
+                }
+                
+                @if(checkBoxIndex[1] == 0)
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="@((e) => DiscountCheckboxClicked(50, 1, e.Value))">
+                    <label class="form-check-label">Upto 50%</label><br />
+                }
+                else if(checkBoxIndex[1] == 1)
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="@((e) => DiscountCheckboxClicked(50, 1, e.Value))" checked>
+                    <label class="form-check-label">Upto 50%</label><br />
+                }
+                @if(checkBoxIndex[2] == 0)
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="@((e) => DiscountCheckboxClicked(75, 2, e.Value))" >
+                    <label class="form-check-label">Upto 75%</label><br />
+                    
+                }
+                else if(checkBoxIndex[2] == 1)
+                {
+                    <input class="form-check-input" type="checkbox" @onchange="@((e) => DiscountCheckboxClicked(75, 2, e.Value))" checked>
+                    <label class="form-check-label">Upto 75%</label><br />
+                }
+            
+                
+            </div>
+        }
+    </div>
+ 
+
+    <div class="form-inline justify-content-center mt-4 col-9">
+        @if (Products == null)
+        {
+            <div style="top:50%;left:53%;margin-top:25px;margin-left:-100px;margin-bottom:25px;">
+                <img src="Images/loader.gif" />
+            </div>
+        }
+        else if (Products != null && Products.Any())
+        {
+            @foreach (var product in FilteredProducts)
+            {
+                int dataSlideTag = 0;
+                int imageIndex = 0;
+
+                <div class="card col-lg-3 col-md-5 col-11 m-3 p-0 shadow" style="text-decoration:none;">
+                    <div id="carouselDiv" class="row p-0 m-0  justify-content-center">
+                        <div id="@caresoltag" class="carousel slide" data-ride="carousel" data-interval="4000">
+                            <ol class="carousel-indicators">
+                                @foreach (var image in product.ProductImages)
+                                {
+
+                                    @if (imageIndex == 0)
+                                    {
+                                        <li data-target="#carouselExampleIndicators" data-slide-to="@dataSlideTag" class="active"></li>
+                                    }
+                                    else
+                                    {
+                                        <li data-target="#carouselExampleIndicators" data-slide-to="@dataSlideTag"></li>
+                                    }
+                                    dataSlideTag++;
+
+                                }
+                            </ol>
+                            <div class="carousel-inner col-12 min-vh-30 p-0" style="height:160px; !important">
+                                <div style="position:relative;">
+                                    @if (product.DiscountPercentage > 0)
+                                    {
+                                        <p class="card-text p-1 bg-success"><small class="text-light">@product.DiscountPercentage% Off</small></p>
+                                    }
+                                </div>
+                                @foreach (var image in product.ProductImages)
+                                {
+                                    @if (imageIndex == 0)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img class="card-img-top" src="@image.ProductImageUrl" onerror="@($"this.src = {@config["AppBasePath"]}Images/product.png;")" alt="Product image cap" />
+                                        </div> 
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img class="card-img-top" src="@image.ProductImageUrl" onerror="@($"this.src = {@config["AppBasePath"]}Images/product.png;")" alt="Product image cap" />
+                                        </div>
+                                    }
+                                    imageIndex++;
+                                }
+                                @{imageIndex = 0;}
+                            
+                                @if (product.ProductImages.Count == 0)
+                                {
+                                    <div class="carousel-item active">
+                                        <img class="card-img-top" src=@($"{@config["AppBasePath"]}/Images/product.png") onerror="@($"this.src = {@config["AppBasePath"]}Images/product.png;")" alt="Product image cap" />
+                                    </div>
+                                }
+
+                            </div>
+                            <a class="carousel-control-prev" href="#@caresoltag" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#@caresoltag" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">@product.Name</h5>
+                        <p class="card-text"><small class="text-muted">Price = @product.Price PKR</small></p>
+                        <a href="@($"/stores/product/{product.Id}/{Id}")" class="btn btn-primary mr-1 col-12">View</a>
+                    </div>
+                    @{caresoltag++;}
+                </div>
+            }
+        }
+        else
+        {
+            <h2>This Store has no Products :)</h2>
+        }
+
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+    int min = 0;
+    int max = 10000;
+    public string SearchProduct { get; set; } = "";
+    public IEnumerable<ProductDTO> FilteredProducts { get; set; }
+    public IEnumerable<CategoryDTO> allCategories { get; set; }
+    public int caresoltag = 0;
+    public UserIpDTO ipAddress { get; set; } = new UserIpDTO();
+    public DateTime timeNow { get; set; }
+    int[] checkBoxIndex = new int[3]{ 0, 0, 0 };
+    public IEnumerable<ProductDTO> Products { get; set; }
+    public int? selectedCategory { get; set; } = null;
+    public IEnumerable<CategoryDTO> Categories { get; set; }
+
+    // I am Adding
+    private List<CategoryAttributesDTO> Attributes = new List<CategoryAttributesDTO>(); //To store category attributes
+    public List<String> attributeValues = new List<String>(); // To store the values of attributes so that the same value appears only once
+    public List<ProductDTO> CategoryAttributesProducts { get; set; }
+    public List<List<String>> selectedAttributes { get; set; } = new List<List<string>>();
+    // I have Added
+
+    public bool IsChecked { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ipAddress = await userIp.GetUserIPAsync();
+            timeNow = DateTime.Now;
+            ipAddress.timeNow = timeNow;
+            ipAddress.StoreId=Id;
+            userIp.StoreIp(ipAddress);
+        }
+        catch (Exception)
+        {
+
+        }
+
+        Products = await localStorage.GetItemAsync<IEnumerable<ProductDTO>>($"storeProductsWithID{Id}");
+        DateTime? productsCachedDate = await localStorage.GetItemAsync<DateTime?>($"storeProductsWithID{Id}CachedDate");
+        allCategories = await localStorage.GetItemAsync<IEnumerable<CategoryDTO>>($"storeCategoriesWithID{Id}");
+
+        double totalCachedHours = 0;
+        if (productsCachedDate is not null)
+        {
+            totalCachedHours = DateTime.UtcNow.Subtract((DateTime)productsCachedDate).TotalHours;
+        }
+
+        if (Products is null || allCategories is null || productsCachedDate is null || totalCachedHours > 24)
+        {
+            Products = await Store.GetStoreProducts(Id);
+            allCategories = await Store.getStoreCategories(Id);
+            await localStorage.SetItemAsync($"storeProductsWithID{Id}", Products);
+            await localStorage.SetItemAsync($"storeCategoriesWithID{Id}", allCategories);
+            await localStorage.SetItemAsync($"storeProductsWithID{Id}CachedDate", DateTime.UtcNow);
+        }
+        
+        FilteredProducts = Products;
+        
+        Store.AddStoreClickCount(Id);
+    }
+    public void searchProductResults()
+    {
+        if (SearchProduct == "")
+        {
+            FilteredProducts = Products;
+        }
+        else
+        {
+            FilteredProducts = Products.Where(i => i.Name.ToLower().Contains(SearchProduct.ToLower())).ToList();
+        }
+    }
+    public async Task DiscountCheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            FilteredProducts = await Store.getDiscountedProducts(Id);
+        }
+        else
+        {
+            FilteredProducts = Products;
+        }
+    }
+
+
+    // I am adding some Code below
+    public async Task CategoryCheckboxClicked(int categoryId)
+    {
+        if (selectedCategory != null && Attributes.Count>0 && !isEmpty())
+        {
+            await JSRuntime.InvokeVoidAsync("resetAttributes");
+        }
+        selectedCategory = categoryId;
+        Attributes.Clear();
+        selectedAttributes.Clear();
+
+        var category = allCategories.FirstOrDefault(c => c.Id == categoryId);
+        foreach (var attribute in category.Attributes)
+        {
+            selectedAttributes.Add(new List<string>{$"{attribute.Key.ToLower()}"});
+            Attributes.Add(attribute);
+        }
+        FilteredProducts = Products.Where(i => i.CategoryId == categoryId);
+        CategoryAttributesProducts = FilteredProducts.ToList();
+
+    }
+
+    // private IEnumerable<ProductDTO> FilterProductsBasedOnAttributes(List<ProductAttributesDTO> selectedAttributes)
+    // {
+    //     // Filter products based on selected attributes and their values
+    //     var matchingProducts = Products;
+
+    //     foreach (var selectedAttribute in selectedAttributes)
+    //     {
+    //         matchingProducts = matchingProducts
+    //             .Where(product => product.Attributes.Any(attr => attr.Key == selectedAttribute.Key && attr.Value == selectedAttribute.Value));
+    //     }
+
+    //     return matchingProducts;
+    // }
+
+    public async Task HandleAttributesCheckBox(string attributeKey, string attributeValue, object checkedValue)
+    {
+        if((bool)checkedValue)
+        {
+            selectedAttributes.FirstOrDefault(attributes => attributes.Contains(attributeKey.ToLower())).Add(attributeValue);
+        }
+        else
+        {
+            selectedAttributes.FirstOrDefault(attributes => attributes.Contains(attributeKey.ToLower())).Remove(attributeValue);
+        }
+
+        if(!isEmpty()) //Handling multiple Product Attributes Selection
+        {
+            List<ProductDTO> prods = new List<ProductDTO>();
+            List<ProductDTO> AttributeFilteredProducts = new List<ProductDTO>();
+            int iteration = 1;
+            foreach(var attributesList in selectedAttributes)
+            {
+                if(attributesList.Count > 1)
+                {
+                    foreach(var attribValue in attributesList)
+                    {
+                        foreach (var prod in CategoryAttributesProducts)
+                        {
+                            var prd = prod.Attributes.Where(i => i.Value.ToLower() == attribValue.ToLower()); //verify .lower()
+
+                            if (prd.Any())
+                                AttributeFilteredProducts.Add(prod);
+                        }
+                        prods = prods.Union(AttributeFilteredProducts).ToList();
+                        AttributeFilteredProducts.Clear();
+
+                    }
+                    if (iteration == 1) //To skip the first iteration
+                    {
+                        FilteredProducts = prods.ToList();
+                        iteration++;
+                    }
+                    else
+                    {
+                        FilteredProducts = FilteredProducts.Intersect(prods).ToList();
+                    }
+                    prods.Clear();
+                }
+            }
+        }
+        else
+        {
+            FilteredProducts = CategoryAttributesProducts;
+        }
+    }
+    public bool isEmpty()
+    {
+        foreach(var lst in selectedAttributes)
+        {
+            if(lst.Count > 1)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    public void resetList()
+    {
+        foreach (var lst in selectedAttributes)
+        {
+            var temp = lst[0];
+            lst.Clear();
+            lst.Add(temp);
+        }
+    }
+    public async Task ResetAttributes()
+    {
+        FilteredProducts = CategoryAttributesProducts;
+        resetList();
+    }
+    public async Task ResetCategories()
+    {
+        min = 0;
+        max = 10000;
+        FilteredProducts = Products;
+        JSRuntime.InvokeVoidAsync("resetCategories");
+        Attributes.Clear();
+        selectedAttributes.Clear();
+        selectedCategory = null;
+    }
+
+    public async Task findProductsByPrice()
+    {
+        FilteredProducts = FilteredProducts.Where(i => i.Price >= min && i.Price <= max);
+    }
+
+    // I am adding some Code above
+
+
+
+    public void DiscountCheckboxClicked(int discount, int index, object checkedValue )
+    {
+        if ((bool)checkedValue)
+        {
+            checkBoxIndex[0] = 0;
+            checkBoxIndex[1] = 0;
+            checkBoxIndex[2] = 0;
+            checkBoxIndex[index] = 1;
+            if (discount == 25)
+            {
+                FilteredProducts = Products.Where(i => i.DiscountPercentage <= 25).ToList();
+            }
+            else if (discount == 50)
+            {
+                FilteredProducts = Products.Where(i => i.DiscountPercentage <= 50).ToList();
+            }
+            else if (discount == 75)
+            {
+                FilteredProducts = Products.Where(i => i.DiscountPercentage <= 75).ToList();
+            }
+        }
+        else
+        {
+            checkBoxIndex[index] = 0;
+            FilteredProducts = Products;
+
+        }
+       
+    }
+}
+<script>
+    function resetAttributes() {
+        // Replace "formId" with the actual ID of your form
+        document.getElementById("CategoryAttributes").reset();
+    }
+    function resetCategories() {
+        // Replace "formId" with the actual ID of your form
+        document.getElementById("Categories").reset();
+    }
+</script>

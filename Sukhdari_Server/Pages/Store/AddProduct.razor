@@ -1,0 +1,486 @@
+﻿@page "/addProduct"
+@page "/product/update/{Id:int}"
+@page "/product/delete/{Id:int}"
+@inject IStoreRepo Store
+@inject ICategoryRepo Category
+@inject IProductRepo Product
+@inject IProductImageRepo productImageRepo
+@using System.IO
+@using DataAccess.Data;
+@using Serilog
+@using Sukhdari_Server.Service.IService
+@inject IImageUpload imageUplaod
+@inject NavigationManager Navigator
+@inject IJSRuntime JsRuntime
+@inject ICategoryRepo CategoryRepo
+@layout StoreAdminLayoutT
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+@using System.Net.Http
+@using System.Text.Json;
+@inject HttpClient HttpClient
+
+<div class="card card-info">
+    <div class="card-header">
+        <div class="card-title float-left pt-2">
+            <h3>@Title</h3>
+        </div>
+    </div>
+    <EditForm Model="ProductDetails" OnValidSubmit="SaveProduct" class="form-horizontal">
+        <div class="card-body">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="product_name">PRODUCT NAME</label>
+                <div class="col-md-7">
+                    <InputText @bind-Value="ProductDetails.Name" placeholder="PRODUCT NAME" class="form-control input-md" />
+                    <ValidationMessage For="()=>ProductDetails.Name"></ValidationMessage>
+
+                </div>
+            </div>
+
+            <!--My Code Starts form here-->
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="product_categorie">PRODUCT CATEGORY</label>
+                <div class="col-md-7">
+                    <InputSelect @bind-Value="ProductDetails.CategoryId" class="form-control" @oninput="HandleCategoryChange">
+                        @foreach (var category in Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="()=>ProductDetails.CategoryId"></ValidationMessage>
+                </div>
+            </div>
+
+
+            <!-- Display category attributes -->
+            @if (ProductDetails.Attributes!= null && ProductDetails.Attributes.Count > 0)
+            {
+                @foreach (var attrib in ProductDetails.Attributes)
+                {
+                    if(attrib.Fixed == true)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-7 control-label">@attrib.Key</label>
+                            <div class="col-md-7">
+                                <InputText required @bind-Value="@attrib.Value" placeholder="VALUE" class="form-control input-md" />
+                            </div>
+                        </div>                        
+                    }
+                }
+            }
+
+ 
+
+            <!--My Code Ends form here-->
+                
+
+
+
+
+
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="price">PRICE</label>
+                <div class="col-md-7">
+                    <InputNumber @bind-Value="ProductDetails.Price" placeholder="Price" class="form-control input-md" />
+                    <ValidationMessage For="()=>ProductDetails.Price"></ValidationMessage>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="discount percentage">Discount Percentage</label>
+                <div class="col-md-7">
+                    <InputNumber @bind-Value="ProductDetails.DiscountPercentage" placeholder="Discount Percentage" class="form-control input-md" />
+                    <ValidationMessage For="()=>ProductDetails.DiscountPercentage"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="discount percentage">Discount Price</label>
+                <div class="col-md-7">
+                    <input readonly value="@ProductDetails.DiscountPrice" placeholder="Discount Price" class="form-control input-md" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="available_quantity">AVAILABLE QUANTITY</label>
+                <div class="col-md-7">
+                    <InputNumber @bind-Value="ProductDetails.Quantity" placeholder="AVAILABLE QUANTITY" class="form-control input-md" />
+                    <ValidationMessage For="()=>ProductDetails.Quantity"></ValidationMessage>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-7 control-label" for="product_description">PRODUCT DESCRIPTION</label>
+                <div class="col-md-7">
+                    <InputTextArea @bind-Value="ProductDetails.Description" class="form-control" name="product_description">
+                    </InputTextArea>
+                    <ValidationMessage For="()=>ProductDetails.Description"></ValidationMessage>
+
+                </div>
+            </div>
+
+            @*New Code Starts from here of adding Dynamic Fields*@
+            @if (ProductDetails.Attributes != null && ProductDetails.Attributes.Count > 0)
+            {
+                @foreach(var attrib in ProductDetails.Attributes)
+                {
+                    if(attrib.Fixed == false)
+                    {
+                        <div class="col-md-8">
+                            <div class="input-group">
+
+                                <InputText id="AttributeKey" @bind-Value="attrib.Key" placeholder="NAME" class="form-control input-md" /> <!nbsp></!nbsp>
+                                <InputText required id="AttributeValue" @bind-Value="attrib.Value" placeholder="VALUE" class="form-control input-md" /> <!nbsp></!nbsp>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-danger" @onclick="()=>ProductDetails.Attributes.Remove(attrib)">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <br />                     
+                    }
+                }
+            }
+
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="button" class="btn btn-info" @onclick="AddAttribute">Add Attribute</button>
+                </div>
+            </div>
+
+            @*New Code Ends here*@
+
+            <div class="form-group">
+                <InputFile OnChange="HandleImageUpload" multiple></InputFile>
+                <div class="note mt-2">
+                    <strong class="d-block mb-2"><em>Note:</em></strong>
+                    <ol class="ml-4" style="font-weight: normal; color: Gray; font-size: 0.7em; FONT-FAMILY: open_sansregular, Verdana,Arial, Helvetica, sans-serif; font-style:italic">
+                        <li>Valid image formats are .jpg, .jpeg, .png</li>
+                        <li>The size of each image must not exceed 250 KB</li>
+                        <li>You can upload maximum 10 images of a product</li>
+                    </ol>
+                </div>
+                <div class="row">
+                    @if (ProductDetails.ImageUrls != null && ProductDetails.ImageUrls.Count > 0)
+                    {
+                        int no = 1;
+                        foreach (var image in ProductDetails.ImageUrls)
+                        {
+                            <div class="col-md-3 mt-3">
+                                <div style="object-fit: cover;">
+                                    <span class="badge badge-danger">@no</span>
+                                    <img src="@image" alt="Product Image" style="width: 5rem;height: 5rem;object-fit: cover;">
+                                </div>
+
+
+                                <button type="button" @onclick="()=>DeleteImage(image)" class="btn btn-danger mt-1">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </div>
+                            no += 1;
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="submit" class="btn btn-info" disabled="@(!AreAllImagesUploaded)">@btnName</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private string Title { get; set; } = "Add Product";
+    private string btnName { get; set; } = "Add Product";
+    private string message { get; set; } = "Product Added Successfully";
+    [Parameter]
+    public int? Id { get; set; }
+    private List<string> DeletedImagesNames { get; set; } = new List<string>();
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    public ProductDTO ProductDetails { get; set; } = new ProductDTO();
+    public IEnumerable<CategoryDTO> Categories { get; set; }
+    private ProductImageDTO ProductImage { get; set; } = new ProductImageDTO();
+
+    //I am Adding a Code
+    public bool AreAllImagesUploaded { get; set; } = true;
+    private List<CategoryAttributesDTO> Attributes = new List<CategoryAttributesDTO>();
+    //I am Added Code Above
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationState;
+
+            var store = Store.GetStoreByAdminName(authState.User.Identity.Name);
+            if (store == null)
+            {
+                Navigator.NavigateTo("/storeNotExist");
+            }
+            else
+            {
+                ProductDetails.StoreId = store.Id;
+
+                Categories = await Category.GetAllCategories(store.Id);
+
+                if (!authState.User.IsInRole(Common.StaticDetails.Role_StoreAdmin))
+                {
+                    var uri = new Uri(Navigator.Uri);
+                    Navigator.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}");
+                }
+                if (Id != null)
+                {
+                    //updating
+                    Title = "Update Product";
+                    btnName = "Update Product";
+                    var product = await Product.GetProduct(Id.Value, ProductDetails.StoreId);
+                    if (product.ProductImages != null)
+                    {
+                        product.ImageUrls = product.ProductImages.Select(i => i.ProductImageUrl).ToList();
+                    }
+                    ProductDetails = product;
+                }
+                else
+                {
+                    ProductDetails.ImageUrls = new List<string>();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while loading AddProduct component\n{ex}\n\n");
+        }
+
+    }
+
+    //I am Adding a Code
+    private void HandleCategoryChange(ChangeEventArgs e)
+    {
+        try
+        {
+            int selectedCategoryId;
+            if (int.TryParse(e.Value.ToString(), out selectedCategoryId))
+            {
+                foreach(var category in Categories)
+                {
+                    if(category.Id == selectedCategoryId)
+                    {
+                        Attributes.Clear();
+                        Attributes = category.Attributes;
+                    }
+                }
+                if(Attributes!=null)
+                {
+                    if (ProductDetails.Attributes != null && ProductDetails.Attributes.Count > 0)
+                    {
+                        ProductDetails.Attributes.Clear();
+                    }
+                    foreach(var attribute in Attributes)
+                    {
+
+                        var attrib = new ProductAttributesDTO { Key = attribute.Key, Fixed=true };
+                        if (ProductDetails.Attributes == null)
+                        {
+                            ProductDetails.Attributes = new List<ProductAttributesDTO>();
+                            ProductDetails.Attributes.Add(attrib);
+                        }
+                        else
+                        {
+                            ProductDetails.Attributes.Add(attrib);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleCategoryChange function in AddProduct component\n{ex}\n\n");
+        }
+
+
+    }
+    //I am Added Code Above
+
+    private async void SaveProduct()
+    {
+        try
+        {
+            AreAllImagesUploaded = false;
+            if (ProductDetails.Id != 0 && Title == "Update Product")
+            {
+                if (DeletedImagesNames != null && DeletedImagesNames.Any())
+                {
+                    foreach (var deleted in DeletedImagesNames)
+                    {
+                        var imageName = deleted.Replace($"{Navigator.BaseUri}ProductImages/", "");
+                        var result = imageUplaod.DeleteImage(imageName);
+                        await productImageRepo.DeleteProductImageByName(deleted);
+                    }
+                }
+            }
+
+            var newProduct = await Product.createProduct(ProductDetails);
+            if(newProduct == null || ProductDetails.Id ==0 && newProduct == null  )
+            {
+                message = "Product With same name already exist";
+                await JsRuntime.ToastrWarning(message);
+                return;
+            }
+            else if(ProductDetails.Id !=0)
+            {
+                message = "Product Updated Successfully";
+            }
+            else
+            {
+                message = "Product Added Successfully";
+            }
+            await AddProductImage(newProduct);
+            ProductDetails = new ProductDTO();
+            StateHasChanged();
+            Navigator.NavigateTo("/products");
+            await JsRuntime.ToastrSuccess(message);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing SaveProduct function in AddProduct component\n{ex}\n\n");
+        }
+
+    }
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            AreAllImagesUploaded = false;
+            var totalImages = e.FileCount;
+            //var images = new List<string>();
+            if (totalImages > 0 && totalImages <= 10)
+            {
+                foreach (var image in e.GetMultipleFiles())
+                {
+                    if (image.Size / 1024 <= 250)
+                    {
+                        System.IO.FileInfo imageInfo = new System.IO.FileInfo(image.Name);
+                        if (imageInfo.Extension.ToLower() == ".jpg" ||
+                        imageInfo.Extension.ToLower() == ".png" ||
+                        imageInfo.Extension.ToLower() == ".jpeg")
+                        {
+                            var uploadedImagePath = await imageUplaod.uploadImage(image);
+                            // images.Add(uploadedImagePath);
+                            ProductDetails.ImageUrls.Add(uploadedImagePath);
+
+                        }
+                        else
+                        {
+                            await JsRuntime.ToastrError($"{image.Name} has Invalid File Format. Supported formats are .jpg, .jpeg, .png");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        await JsRuntime.ToastrError($"{image.Name} has size greater than 250 KB");
+                    }
+
+                }
+                AreAllImagesUploaded = true;
+
+            }
+            else if (totalImages > 10)
+            {
+                await JsRuntime.ToastrError($"You can upload max. 10 image files");
+                AreAllImagesUploaded = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleImageUpload function in AddProduct component\n{ex}\n\n");
+        }
+    }
+
+    private async Task AddProductImage(ProductDTO product)
+    {
+        try
+        {
+            if (ProductDetails.ImageUrls != null && ProductDetails.ImageUrls.Any())
+            {
+                foreach (var image in ProductDetails.ImageUrls)
+                {
+                    if (ProductDetails.ProductImages == null || ProductDetails.ProductImages.Where(x => x.ProductImageUrl == image).Count()
+                    == 0)
+
+                    {
+                        ProductImage = new ProductImageDTO()
+                            {
+                                ProductId = product.Id,
+                                ProductImageUrl = image
+                            };
+                        await productImageRepo.CreateProductImage(ProductImage);
+
+                    }
+
+                }
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing AddProductImage function in AddProduct component\n{ex}\n\n");
+        }
+
+
+    }
+
+    internal async Task DeleteImage(string imageUrl)
+    {
+        try
+        {
+            var imageIndex = ProductDetails.ImageUrls.FindIndex(i => i == imageUrl);
+            var imageName = imageUrl.Replace($"{Navigator.BaseUri}ProductImages/", "");
+            if (ProductDetails.Id == 0 && Title == "Add Product")
+            {
+                var result = imageUplaod.DeleteImage(imageName);
+
+            }
+            else
+            {
+                DeletedImagesNames ??= new List<string>();
+                DeletedImagesNames.Add(imageUrl);
+            }
+            ProductDetails.ImageUrls.RemoveAt(imageIndex);
+            await JsRuntime.ToastrSuccess("Image Deleted Successfully");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing DeleteImage function in AddProduct component\n{ex}\n\n");
+
+        }
+    }
+    public void AddAttribute()
+    {
+        try
+        {
+            if(ProductDetails.Attributes == null)
+            {
+                ProductDetails.Attributes = new List<ProductAttributesDTO>();
+                ProductDetails.Attributes.Add(new ProductAttributesDTO() {Fixed=false});
+            }
+            else
+            {
+                ProductDetails.Attributes.Add(new ProductAttributesDTO() { Fixed = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing AddAttribute function in AddProduct component\n{ex}\n\n");
+        }
+
+    }
+}

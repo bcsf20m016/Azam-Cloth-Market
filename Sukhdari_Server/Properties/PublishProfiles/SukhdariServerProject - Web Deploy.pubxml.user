@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAMQnlzKy780auLoJeuVXIGgAAAAACAAAAAAAQZgAAAAEAACAAAACNT5yxQchG4/YlEgVV10vvh5o25aoLkS91Bc25r0Ev2gAAAAAOgAAAAAIAACAAAAC3EjYnMRrbEtPW2186ioAvbZTb2cuJGSx+mMMlKXFvD4AAAAArRm07Ii/lgbn/+nbBkN3ADDHSHXRwL6mxZdmEG6FNgDtRTeyCS/FhLawlWgyRk5RcWx+67vXGgfnjBFWRINMQ5icAMo4TPKiyphtL2+IJZNgpL5lxfUQ1B50TsVwgOMKEu2Q0XRJx08vwLw4RtnFr49SB13XXP9qg/YmQ5rG6o0AAAAB6/BMOgXwAD33XIIK5pzTDzZzMeuxzoekDQWFiA2LA+co3oEvS9XGF/W4Qn4ViIR7Lo/QKJNMRA384KGPKRKiN</EncryptedPassword>
+    <History>True|2023-09-10T11:35:45.7043358Z;True|2023-09-09T14:51:11.1453370+05:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=sukhdari-apidbserver.database.windows.net%3bInitial Catalog=Sukhdari_Api_db%3bUser ID=SukhdariAdmin%3bPassword=Sukhdari123%40%3bConnect Timeout=30%3bEncrypt=True%3bTrust Server Certificate=False%3bApplication Intent=ReadWrite%3bMulti Subnet Failover=False</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

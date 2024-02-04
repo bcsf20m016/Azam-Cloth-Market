@@ -1,0 +1,91 @@
+2024-01-30 01:36:06.526 +05:00 [INF] The Application is starting
+
+
+2024-01-30 01:45:36.195 +05:00 [INF] The Application is starting
+
+
+2024-01-30 01:59:08.051 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:00:47.910 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:01:09.870 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:07:20.176 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:11:44.603 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:18:57.383 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:21:09.739 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:23:00.782 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:23:35.651 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:32:57.191 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:38:24.839 +05:00 [INF] The Application is starting
+
+
+2024-01-30 02:54:33.761 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:03:54.825 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:05:24.768 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 124
+
+
+2024-01-30 03:05:27.965 +05:00 [ERR] Error while loading StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\FYP\Sukhdari\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 126
+
+
+2024-01-30 03:09:10.778 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:13:38.583 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:16:40.770 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:19:08.678 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:23:26.113 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:26:56.772 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:28:09.060 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:30:41.344 +05:00 [INF] The Application is starting
+
+
+2024-01-30 03:38:57.263 +05:00 [INF] The Application is starting
+
+
+2024-01-30 08:20:45.162 +05:00 [INF] The Application is starting
+
+
+2024-01-30 08:29:13.761 +05:00 [INF] The Application is starting
+
+

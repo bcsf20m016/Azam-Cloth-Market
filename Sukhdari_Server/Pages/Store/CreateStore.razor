@@ -1,0 +1,842 @@
+﻿@page "/createStore"
+@page "/details"
+@layout StoreAdminLayoutT
+@using Serilog
+@using Syncfusion.Blazor.Buttons
+@inject IStoreRepo Store
+@inject ITagTypeRepo TagTypeRepo
+@inject IStoreTagRepo StoreTag
+@inject ITagRepo TagRepo
+@inject NavigationManager Navigator
+@using System.IO
+@using Sukhdari_Server.Service.IService
+@inject IImageUpload imageUplaod
+@inject IStoreImageRepo storeImageRepo
+@inject IJSRuntime JsRuntime
+@attribute [Authorize(Roles = Common.StaticDetails.Role_StoreAdmin)]
+
+
+<style>
+    .container {
+    max-width: 640px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    }
+
+    ul.ks-cboxtags {
+        list-style: none;
+       /* padding: 20px;*/
+    }
+    ul.ks-cboxtags li{
+      display: inline;
+    }
+    ul.ks-cboxtags li label{
+        display: inline-block;
+        background-color: rgba(255, 255, 255, .9);
+        border: 2px solid rgba(139, 139, 139, .3);
+        color: #adadad;
+        border-radius: 25px;
+        white-space: nowrap;
+        margin: 3px 0px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: all .2s;
+    }
+
+    ul.ks-cboxtags li label {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    ul.ks-cboxtags li label::before {
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 12px;
+        padding: 2px 6px 2px 2px;
+        content: "\f067";
+        transition: transform .3s ease-in-out;
+    }
+
+    ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+        content: "\f00c";
+        transform: rotate(-360deg);
+        transition: transform .3s ease-in-out;
+    }
+
+    ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+        border: 2px solid #1bdbf8;
+        background-color: #12bbd4;
+        color: #fff;
+        transition: all .2s;
+    }
+
+    ul.ks-cboxtags li input[type="checkbox"] {
+      display: absolute;
+    }
+    ul.ks-cboxtags li input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+    }
+    ul.ks-cboxtags li input[type="checkbox"]:focus + label {
+      border: 2px solid #e9a1ff;
+    }
+  
+</style>
+
+
+
+
+
+<h3 class="mt-3">@Title</h3>
+<EditForm Model="StoreDetails" OnValidSubmit="@CreateStoreWithDTO" class="form-horizontal mb-3">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="store_name">STORE NAME</label>
+        <div class="col-md-7 d-flex flex-row">
+            <InputText @bind-Value="StoreDetails.Name" @oninput="CheckStoreAvailability" id="store_name" name="store_name" placeholder="STORE NAME" class="@(StoreAvailability?"form-control input-md is-valid":"form-control input-md  is-invalid")" />
+            <ValidationMessage For="()=>StoreDetails.Name"></ValidationMessage>
+        </div>
+    </div>
+   
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="store_type">Country</label>
+        <div class="col-md-7">
+            <InputSelect @bind-Value="StoreDetails.Country" class="form-control">
+                         <option value="Afganistan">Afghanistan</option>
+                         <option value="Albania">Albania</option>
+                         <option value="Algeria">Algeria</option>
+                         <option value="American Samoa">American Samoa</option>
+                         <option value="Andorra">Andorra</option>
+                         <option value="Angola">Angola</option>
+                         <option value="Anguilla">Anguilla</option>
+                         <option value="Antigua & Barbuda">Antigua & Barbuda</option>
+                         <option value="Argentina">Argentina</option>
+                         <option value="Armenia">Armenia</option>
+                         <option value="Aruba">Aruba</option>
+                         <option value="Australia">Australia</option>
+                         <option value="Austria">Austria</option>
+                         <option value="Azerbaijan">Azerbaijan</option>
+                         <option value="Bahamas">Bahamas</option>
+                         <option value="Bahrain">Bahrain</option>
+                         <option value="Bangladesh">Bangladesh</option>
+                         <option value="Barbados">Barbados</option>
+                         <option value="Belarus">Belarus</option>
+                         <option value="Belgium">Belgium</option>
+                         <option value="Belize">Belize</option>
+                         <option value="Benin">Benin</option>
+                         <option value="Bermuda">Bermuda</option>
+                         <option value="Bhutan">Bhutan</option>
+                         <option value="Bolivia">Bolivia</option>
+                         <option value="Bonaire">Bonaire</option>
+                         <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
+                         <option value="Botswana">Botswana</option>
+                         <option value="Brazil">Brazil</option>
+                         <option value="British Indian Ocean Ter">British Indian Ocean Ter</option>
+                         <option value="Brunei">Brunei</option>
+                         <option value="Bulgaria">Bulgaria</option>
+                         <option value="Burkina Faso">Burkina Faso</option>
+                         <option value="Burundi">Burundi</option>
+                         <option value="Cambodia">Cambodia</option>
+                         <option value="Cameroon">Cameroon</option>
+                         <option value="Canada">Canada</option>
+                         <option value="Canary Islands">Canary Islands</option>
+                         <option value="Cape Verde">Cape Verde</option>
+                         <option value="Cayman Islands">Cayman Islands</option>
+                         <option value="Central African Republic">Central African Republic</option>
+                         <option value="Chad">Chad</option>
+                         <option value="Channel Islands">Channel Islands</option>
+                         <option value="Chile">Chile</option>
+                         <option value="China">China</option>
+                         <option value="Christmas Island">Christmas Island</option>
+                         <option value="Cocos Island">Cocos Island</option>
+                         <option value="Colombia">Colombia</option>
+                         <option value="Comoros">Comoros</option>
+                         <option value="Congo">Congo</option>
+                         <option value="Cook Islands">Cook Islands</option>
+                         <option value="Costa Rica">Costa Rica</option>
+                         <option value="Cote DIvoire">Cote DIvoire</option>
+                         <option value="Croatia">Croatia</option>
+                         <option value="Cuba">Cuba</option>
+                         <option value="Curaco">Curacao</option>
+                         <option value="Cyprus">Cyprus</option>
+                         <option value="Czech Republic">Czech Republic</option>
+                         <option value="Denmark">Denmark</option>
+                         <option value="Djibouti">Djibouti</option>
+                         <option value="Dominica">Dominica</option>
+                         <option value="Dominican Republic">Dominican Republic</option>
+                         <option value="East Timor">East Timor</option>
+                         <option value="Ecuador">Ecuador</option>
+                         <option value="Egypt">Egypt</option>
+                         <option value="El Salvador">El Salvador</option>
+                         <option value="Equatorial Guinea">Equatorial Guinea</option>
+                         <option value="Eritrea">Eritrea</option>
+                         <option value="Estonia">Estonia</option>
+                         <option value="Ethiopia">Ethiopia</option>
+                         <option value="Falkland Islands">Falkland Islands</option>
+                         <option value="Faroe Islands">Faroe Islands</option>
+                         <option value="Fiji">Fiji</option>
+                         <option value="Finland">Finland</option>
+                         <option value="France">France</option>
+                         <option value="French Guiana">French Guiana</option>
+                         <option value="French Polynesia">French Polynesia</option>
+                         <option value="French Southern Ter">French Southern Ter</option>
+                         <option value="Gabon">Gabon</option>
+                         <option value="Gambia">Gambia</option>
+                         <option value="Georgia">Georgia</option>
+                         <option value="Germany">Germany</option>
+                         <option value="Ghana">Ghana</option>
+                         <option value="Gibraltar">Gibraltar</option>
+                         <option value="Great Britain">Great Britain</option>
+                         <option value="Greece">Greece</option>
+                         <option value="Greenland">Greenland</option>
+                         <option value="Grenada">Grenada</option>
+                         <option value="Guadeloupe">Guadeloupe</option>
+                         <option value="Guam">Guam</option>
+                         <option value="Guatemala">Guatemala</option>
+                         <option value="Guinea">Guinea</option>
+                         <option value="Guyana">Guyana</option>
+                         <option value="Haiti">Haiti</option>
+                         <option value="Hawaii">Hawaii</option>
+                         <option value="Honduras">Honduras</option>
+                         <option value="Hong Kong">Hong Kong</option>
+                         <option value="Hungary">Hungary</option>
+                         <option value="Iceland">Iceland</option>
+                         <option value="Indonesia">Indonesia</option>
+                         <option value="India">India</option>
+                         <option value="Iran">Iran</option>
+                         <option value="Iraq">Iraq</option>
+                         <option value="Ireland">Ireland</option>
+                         <option value="Isle of Man">Isle of Man</option>
+                         <option value="Israel">Israel</option>
+                         <option value="Italy">Italy</option>
+                         <option value="Jamaica">Jamaica</option>
+                         <option value="Japan">Japan</option>
+                         <option value="Jordan">Jordan</option>
+                         <option value="Kazakhstan">Kazakhstan</option>
+                         <option value="Kenya">Kenya</option>
+                         <option value="Kiribati">Kiribati</option>
+                         <option value="Korea North">Korea North</option>
+                         <option value="Korea Sout">Korea South</option>
+                         <option value="Kuwait">Kuwait</option>
+                         <option value="Kyrgyzstan">Kyrgyzstan</option>
+                         <option value="Laos">Laos</option>
+                         <option value="Latvia">Latvia</option>
+                         <option value="Lebanon">Lebanon</option>
+                         <option value="Lesotho">Lesotho</option>
+                         <option value="Liberia">Liberia</option>
+                         <option value="Libya">Libya</option>
+                         <option value="Liechtenstein">Liechtenstein</option>
+                         <option value="Lithuania">Lithuania</option>
+                         <option value="Luxembourg">Luxembourg</option>
+                         <option value="Macau">Macau</option>
+                         <option value="Macedonia">Macedonia</option>
+                         <option value="Madagascar">Madagascar</option>
+                         <option value="Malaysia">Malaysia</option>
+                         <option value="Malawi">Malawi</option>
+                         <option value="Maldives">Maldives</option>
+                         <option value="Mali">Mali</option>
+                         <option value="Malta">Malta</option>
+                         <option value="Marshall Islands">Marshall Islands</option>
+                         <option value="Martinique">Martinique</option>
+                         <option value="Mauritania">Mauritania</option>
+                         <option value="Mauritius">Mauritius</option>
+                         <option value="Mayotte">Mayotte</option>
+                         <option value="Mexico">Mexico</option>
+                         <option value="Midway Islands">Midway Islands</option>
+                         <option value="Moldova">Moldova</option>
+                         <option value="Monaco">Monaco</option>
+                         <option value="Mongolia">Mongolia</option>
+                         <option value="Montserrat">Montserrat</option>
+                         <option value="Morocco">Morocco</option>
+                         <option value="Mozambique">Mozambique</option>
+                         <option value="Myanmar">Myanmar</option>
+                         <option value="Nambia">Nambia</option>
+                         <option value="Nauru">Nauru</option>
+                         <option value="Nepal">Nepal</option>
+                         <option value="Netherland Antilles">Netherland Antilles</option>
+                         <option value="Netherlands">Netherlands (Holland, Europe)</option>
+                         <option value="Nevis">Nevis</option>
+                         <option value="New Caledonia">New Caledonia</option>
+                         <option value="New Zealand">New Zealand</option>
+                         <option value="Nicaragua">Nicaragua</option>
+                         <option value="Niger">Niger</option>
+                         <option value="Nigeria">Nigeria</option>
+                         <option value="Niue">Niue</option>
+                         <option value="Norfolk Island">Norfolk Island</option>
+                         <option value="Norway">Norway</option>
+                         <option value="Oman">Oman</option>
+                         <option value="Pakistan">Pakistan</option>
+                         <option value="Palau Island">Palau Island</option>
+                         <option value="Palestine">Palestine</option>
+                         <option value="Panama">Panama</option>
+                         <option value="Papua New Guinea">Papua New Guinea</option>
+                         <option value="Paraguay">Paraguay</option>
+                         <option value="Peru">Peru</option>
+                         <option value="Phillipines">Philippines</option>
+                         <option value="Pitcairn Island">Pitcairn Island</option>
+                         <option value="Poland">Poland</option>
+                         <option value="Portugal">Portugal</option>
+                         <option value="Puerto Rico">Puerto Rico</option>
+                         <option value="Qatar">Qatar</option>
+                         <option value="Republic of Montenegro">Republic of Montenegro</option>
+                         <option value="Republic of Serbia">Republic of Serbia</option>
+                         <option value="Reunion">Reunion</option>
+                         <option value="Romania">Romania</option>
+                         <option value="Russia">Russia</option>
+                         <option value="Rwanda">Rwanda</option>
+                         <option value="St Barthelemy">St Barthelemy</option>
+                         <option value="St Eustatius">St Eustatius</option>
+                         <option value="St Helena">St Helena</option>
+                         <option value="St Kitts-Nevis">St Kitts-Nevis</option>
+                         <option value="St Lucia">St Lucia</option>
+                         <option value="St Maarten">St Maarten</option>
+                         <option value="St Pierre & Miquelon">St Pierre & Miquelon</option>
+                         <option value="St Vincent & Grenadines">St Vincent & Grenadines</option>
+                         <option value="Saipan">Saipan</option>
+                         <option value="Samoa">Samoa</option>
+                         <option value="Samoa American">Samoa American</option>
+                         <option value="San Marino">San Marino</option>
+                         <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                         <option value="Saudi Arabia">Saudi Arabia</option>
+                         <option value="Senegal">Senegal</option>
+                         <option value="Seychelles">Seychelles</option>
+                         <option value="Sierra Leone">Sierra Leone</option>
+                         <option value="Singapore">Singapore</option>
+                         <option value="Slovakia">Slovakia</option>
+                         <option value="Slovenia">Slovenia</option>
+                         <option value="Solomon Islands">Solomon Islands</option>
+                         <option value="Somalia">Somalia</option>
+                         <option value="South Africa">South Africa</option>
+                         <option value="Spain">Spain</option>
+                         <option value="Sri Lanka">Sri Lanka</option>
+                         <option value="Sudan">Sudan</option>
+                         <option value="Suriname">Suriname</option>
+                         <option value="Swaziland">Swaziland</option>
+                         <option value="Sweden">Sweden</option>
+                         <option value="Switzerland">Switzerland</option>
+                         <option value="Syria">Syria</option>
+                         <option value="Tahiti">Tahiti</option>
+                         <option value="Taiwan">Taiwan</option>
+                         <option value="Tajikistan">Tajikistan</option>
+                         <option value="Tanzania">Tanzania</option>
+                         <option value="Thailand">Thailand</option>
+                         <option value="Togo">Togo</option>
+                         <option value="Tokelau">Tokelau</option>
+                         <option value="Tonga">Tonga</option>
+                         <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                         <option value="Tunisia">Tunisia</option>
+                         <option value="Turkey">Turkey</option>
+                         <option value="Turkmenistan">Turkmenistan</option>
+                         <option value="Turks & Caicos Is">Turks & Caicos Is</option>
+                         <option value="Tuvalu">Tuvalu</option>
+                         <option value="Uganda">Uganda</option>
+                         <option value="United Kingdom">United Kingdom</option>
+                         <option value="Ukraine">Ukraine</option>
+                         <option value="United Arab Erimates">United Arab Emirates</option>
+                         <option value="United States of America">United States of America</option>
+                         <option value="Uraguay">Uruguay</option>
+                         <option value="Uzbekistan">Uzbekistan</option>
+                         <option value="Vanuatu">Vanuatu</option>
+                         <option value="Vatican City State">Vatican City State</option>
+                         <option value="Venezuela">Venezuela</option>
+                         <option value="Vietnam">Vietnam</option>
+                         <option value="Virgin Islands (Brit)">Virgin Islands (Brit)</option>
+                         <option value="Virgin Islands (USA)">Virgin Islands (USA)</option>
+                         <option value="Wake Island">Wake Island</option>
+                         <option value="Wallis & Futana Is">Wallis & Futana Is</option>
+                         <option value="Yemen">Yemen</option>
+                         <option value="Zaire">Zaire</option>
+                         <option value="Zambia">Zambia</option>
+                         <option value="Zimbabwe">Zimbabwe</option>
+            </InputSelect>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="store_address">STORE Address</label>
+        <div class="col-md-7">
+            
+            <InputText @bind-Value="StoreDetails.Address" id="store_address" name="store_address" placeholder="place mark Streat no. city" class="form-control input-md" /> @*change input with inputtext when bind-value is available*@
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="ph_no">Phone No.</label>
+        <div class="col-md-7">
+            <InputText type="tel" id="ph_no" name="ph_no" placeholder="xxxx-xxxxxxx" class="form-control input-md" @bind-Value="StoreDetails.phoneNo" />
+            <ValidationMessage For="()=>StoreDetails.phoneNo"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="store_description">STORE DESCRIPTION</label>
+        <div class="col-md-7">
+            <InputTextArea id="store_description" @bind-Value="StoreDetails.Description" name="store_description" placeholder="Write brief introduction of your store" class="form-control input-md" /> @*change textarea with inputtextarea when bind-value is available*@
+        </div>
+    </div>
+
+     <div class="form-group">
+        <label class="col-md-7 control-label" for="store_type">STORE TYPE</label>
+        <div class="col-md-7">
+            @if(isFlag)
+            {
+                <select @onchange="DoStuff" id="store_type" name="store_type" class="form-control">
+                    @if(TagType != null && TagType.Any())
+                    {
+                        @foreach (var type in TagType)
+                        {
+                            @if(type.name == StoreDetails.Type)
+                            {
+                                <option value="@type.id" selected>@type.name</option>
+                            }
+                            else
+                            {
+                                <option value="@type.id">@type.name</option>
+                            }
+                            
+                        }
+                    }
+                </select>
+            }
+            else
+            {
+                 <select @onchange="DoStuff" id="store_type" name="store_type" class="form-control">
+                     <option value="select_tag" disabled>Select Type</option> 
+                     @foreach (var type in TagType)
+                     {
+                        <option value="@type.id">@type.name</option>
+                     }
+                 </select>
+            }
+            <ValidationMessage For="()=>StoreDetails.Type"></ValidationMessage>
+        </div>
+    </div>
+
+    @*New Code Starts from here of adding Dynamic Fields*@
+    @if (StoreDetails.Attributes != null && StoreDetails.Attributes.Count > 0)
+    {
+        @foreach (var attrib in StoreDetails.Attributes)
+        {
+            <div class="col-md-8">
+                <div class="input-group">
+                    <InputText id="AttributeKey" @bind-Value="attrib.Key" placeholder="NAME" class="form-control input-md" /> <!nbsp></!nbsp>
+                    <InputText id="AttributeValue" @bind-Value="attrib.Value" placeholder="VALUE" class="form-control input-md" /> <!nbsp></!nbsp>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-danger" @onclick="()=>StoreDetails.Attributes.Remove(attrib)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <br />
+        }
+    }
+
+    <div class="form-group">
+        <div class="col-md-7">
+            <button type="button" class="btn btn-info" @onclick="AddAttribute">Add More Information</button>
+        </div>
+    </div>
+    @*New Code Ends here*@
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="tags">Tags</label>
+        <div class="col-md-7">
+               <div class="container">
+                <ul class="ks-cboxtags">
+                    @if(isFlag)
+                    {
+                        @if (Tags != null && Tags.Any())
+                        {
+                            @foreach (var tag in Tags)
+                            {
+                                @if (storeTagsName.Contains(@tag.Id))
+                                {
+                                     <li>
+                                        <input type="checkbox" checked id="@tag.Id" @onchange="@(async (e) => await TagboxClicked(@tag, e.Value))">
+                                        <label for="@tag.Id">@tag.Name</label>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <input type="checkbox" id="@tag.Id" value="@tag.Id" @onchange="@(async (e) => await TagboxClicked(@tag, e.Value))">
+                                        <label for="@tag.Id">@tag.Name</label>
+                                    </li>
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                         @if (Tags != null && Tags.Any())
+                        {
+                            @foreach (var tag in Tags)
+                            {
+                                <li>
+                                    <input type="checkbox" id="@tag.Id" value="@tag.Id" @onchange="@(async (e) => await TagboxClicked(@tag, e.Value))">
+                                    <label for="@tag.Id">@tag.Name</label>
+                                </li>   
+                            }
+                        }
+                    }
+                </ul>
+            
+            </div> 
+            
+            
+            @*<textarea id="tags" name="tags" class="form-control input-md"></textarea>*@     
+            @*<div>
+                
+                    <a class="badge rounded-pill badge-secondary">@tag.Name</a>
+                }
+                }
+                
+            </div> *@   
+        </div>
+    </div>
+
+    
+
+    <div class="form-group">
+        <InputFile OnChange="HandleImageUpload" multiple></InputFile>
+        <div class="row">
+            @if (StoreDetails.ImageUrls != null && StoreDetails.ImageUrls.Count > 0)
+            {
+                int no = 1;
+                foreach (var image in StoreDetails.ImageUrls)
+                {
+                    <div class="col-md-3 mt-3">
+                        <div style="object-fit: cover;">
+                            <span class="badge badge-danger">@no</span>
+                            <img src="@image" alt="Store Image" style="width: 5rem;height: 5rem;object-fit: cover;">
+                        </div>
+
+
+                        <button type="button" @onclick="()=>DeleteImage(image)"
+                        class="btn btn-danger mt-1">
+                            <i class="oi oi-trash"></i>
+                        </button>
+                    </div>
+                    no += 1;
+                }
+            }
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <button type="submit" disabled="@ShowButton" class="btn btn-dark text-white">@SubmitBtnTxt</button>
+    </div>
+</EditForm>
+
+@code {
+    public string Title = "Create Store";
+    public string typeStore = "";
+    bool isFlag = false;
+    TagTypeDTO storeType = new TagTypeDTO();
+    public string SubmitBtnTxt = "Add";
+    public bool StoreAvailability { get; set; } = true;
+    public bool ShowButton { get; set; } = false;
+    private List<string> DeleteImagesName { get; set; } = new List<string>();
+    public IEnumerable<TagTypeDTO> TagType { get; set; }
+    public IEnumerable<TagDTO> Tags { get; set; }
+    public List<int> selectedTags = new List<int>();
+    public IEnumerable<StoreTagDTO> storeTagsID { get; set; }
+    public List<int> storeTagsName = new List<int>();
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    private StoreDTO StoreDetails { get; set; } = new StoreDTO();
+    private StoreImageDTO StoreImage { get; set; } = new StoreImageDTO();
+    int typeID;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            TagType = await TagTypeRepo.GetAllTagsType();
+            var authState = await AuthenticationState;
+            string adminName = authState.User.Identity.Name;
+            var store = Store.GetStoreByAdminName(adminName);
+            if (store != null)
+            {
+                Title = "Store Details";
+                SubmitBtnTxt = "Update";
+                if (store.StoreImages != null)
+                {
+                    store.ImageUrls = store.StoreImages.Select(i => i.StoreImageUrl).ToList();
+                }
+                isFlag = true;
+                storeTagsID = await StoreTag.getStoreTags(store.Id);
+                foreach (var sTag in storeTagsID)
+                {
+                    var addTag = await TagRepo.getTag(sTag.tagId);
+                    storeTagsName.Add(addTag.Id);
+                }
+                var typeID = TagTypeRepo.GetTagType(store.Type);
+                Tags = await TagRepo.getTypeTags(typeID);
+                StoreDetails = store;
+                StoreDetails.AdminName = authState.User.Identity.Name;
+                //StoreDetails.Description = "Write store description here";
+            }
+            StoreDetails.AdminName = adminName;
+        }
+        catch(Exception ex)
+        {
+            Log.Error($"Error while loading CreateStore component for {SubmitBtnTxt} operation\n{ex}\n\n");
+        }
+
+    }
+    private async Task AddStoreImage(StoreDTO store)
+    {
+        try
+        {
+            if (StoreDetails.ImageUrls != null && StoreDetails.ImageUrls.Any())
+            {
+                foreach (var image in StoreDetails.ImageUrls)
+                {
+                    if (StoreDetails.StoreImages == null || StoreDetails.StoreImages.Where(x => x.StoreImageUrl == image).Count()
+                    == 0)
+
+                    {
+                        StoreImage = new StoreImageDTO()
+                            {
+                                StoreId = store.Id,
+                                StoreImageUrl = image
+                            };
+                        await storeImageRepo.CreateStoreImage(StoreImage);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing AddStoreImage function in CreateStore component\n{ex}\n\n");
+        }
+
+    }
+    internal async Task DeleteImage(string imageUrl)
+    {
+        try
+        {
+            var imageIndex = StoreDetails.ImageUrls.FindIndex(i => i == imageUrl);
+            var imageName = imageUrl.Replace($"{Navigator.BaseUri}ProductImages/", "");
+            if (StoreDetails.Id == 0 && Title == "Create Store")
+            {
+                var result = imageUplaod.DeleteImage(imageName);
+
+            }
+            else
+            {
+                DeleteImagesName ??= new List<string>();
+                DeleteImagesName.Add(imageUrl);
+            }
+            StoreDetails.ImageUrls.RemoveAt(imageIndex);
+            await JsRuntime.ToastrSuccess("Image Deleted Successfully");
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing DeleteImage function in CreateStore component\n{ex}\n\n");
+        }
+    }
+    private async void CreateStoreWithDTO()
+    {
+        try
+        {
+            string message = "Store Details Added Successfully";
+            if (StoreDetails.Id != 0 && Title == "Store Details")
+            {
+                if (DeleteImagesName != null && DeleteImagesName.Any())
+                {
+                    foreach (var deletedImage in DeleteImagesName)
+                    {
+                        var name = deletedImage.Replace($"{Navigator.BaseUri}ProductImages/", "");
+                        var result = imageUplaod.DeleteImage(name);
+                        await storeImageRepo.DeleteStoreImageByName(deletedImage);
+                    }
+                }
+                message = "Store Details Updated";
+            }
+            var newStore = await Store.createStore(StoreDetails);
+            await AddStoreImage(newStore);
+            var authState = await AuthenticationState;
+            var storeID = Store.GetStoreByAdminName(authState.User.Identity.Name).Id;
+            foreach (var tag in selectedTags)
+            {
+                await StoreTag.AddStoreTag(storeID, tag);
+            }
+            StoreDetails = new StoreDTO();
+            StateHasChanged();
+            Navigator.NavigateTo("/store/dashboard");
+            await JsRuntime.ToastrSuccess(message);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing CreateStoreWithDTO function in CreateStore component\n{ex}\n\n");
+        }
+    }
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var images = new List<string>();
+            if (e.GetMultipleFiles().Count > 0)
+            {
+                foreach (var image in e.GetMultipleFiles())
+                {
+                    System.IO.FileInfo imageInfo = new System.IO.FileInfo(image.Name);
+                    if (imageInfo.Extension.ToLower() == ".jpg" ||
+                    imageInfo.Extension.ToLower() == ".png" ||
+                    imageInfo.Extension.ToLower() == ".jpeg")
+                    {
+                        var uploadedImagePath = await imageUplaod.uploadImage(image);
+                        images.Add(uploadedImagePath);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                if (images.Any())
+                {
+                    if (StoreDetails.ImageUrls != null && StoreDetails.ImageUrls.Any())
+                    {
+                        StoreDetails.ImageUrls.AddRange(images);
+                        await JsRuntime.ToastrSuccess("Store Images updated");
+                    }
+                    else
+                    {
+                        StoreDetails.ImageUrls = new List<string>();
+                        StoreDetails.ImageUrls.AddRange(images);
+                        await JsRuntime.ToastrSuccess("Store Images Added Successfully");
+                    }
+                }
+                else
+                {
+                    return;
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing HandleImageUpload function in CreateStore component\n{ex}\n\n");
+        }
+    }
+    protected async Task CheckStoreAvailability(ChangeEventArgs e)
+    {
+        try
+        {
+            var result = Store.GetStoreByName(Convert.ToString(e.Value));
+            if (result == null)
+            {
+                StoreAvailability = true;
+                ShowButton = false;
+
+            }
+            else
+            {
+                StoreAvailability = false;
+                ShowButton = true;
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Log.Error($"Error while executing CheckStoreAvailability function in CreateStore component\n{ex}\n\n");
+        }
+        
+    }
+    private async Task DoStuff(ChangeEventArgs e)
+    {
+        try
+        {
+            if (e.Value.ToString() != "select_tag")
+            {
+                var selectedString = e.Value.ToString();
+                typeID = Convert.ToInt32(selectedString);
+                Tags = await TagRepo.getTypeTags(typeID);
+                var tagType = TagTypeRepo.GetTagTypeByName(typeID);
+                StoreDetails.Type = tagType;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing DoStuff function in CreateStore component\n{ex}\n\n");
+        }
+        
+    }
+    public async Task TagboxClicked(TagDTO tagDTO, object checkedValue)
+    {
+        try
+        {
+            if (isFlag)
+            {
+                if ((bool)checkedValue)
+                {
+                    if (!selectedTags.Contains(tagDTO.Id))
+                    {
+                        selectedTags.Add(tagDTO.Id);
+                    }
+                }
+                else
+                {
+                    if (selectedTags.Contains(tagDTO.Id))
+                    {
+                        selectedTags.Remove(tagDTO.Id);
+                    }
+                }
+            }
+            else
+            {
+                if ((bool)checkedValue)
+                {
+                    if (!selectedTags.Contains(tagDTO.Id))
+                    {
+                        selectedTags.Add(tagDTO.Id);
+                    }
+                }
+                else
+                {
+                    if (selectedTags.Contains(tagDTO.Id))
+                    {
+                        selectedTags.Remove(tagDTO.Id);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing TagboxClicked function in CreateStore component\n{ex}\n\n");
+        }
+
+    }
+    public void AddAttribute()
+    {
+        try
+        {
+            if (StoreDetails.Attributes == null)
+            {
+                StoreDetails.Attributes = new List<StoreAttributesDTO>();
+                StoreDetails.Attributes.Add(new StoreAttributesDTO());
+            }
+            else
+            {
+                StoreDetails.Attributes.Add(new StoreAttributesDTO());
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error while executing AddAttribute function in CreateStore component\n{ex}\n\n");
+        }
+
+    }
+}

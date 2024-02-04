@@ -1,0 +1,61 @@
+@inject IWebAssemblyHostEnvironment hostEnv
+@inject Microsoft.Extensions.Configuration.IConfiguration config
+
+@inject IStoreService Store
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <h3><a class="navbar-brand" href=@($"{@config["AppBasePath"]}")>Sukhdari</a></h3>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"
+        @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="@NavMenuCssClass navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+
+
+        @*<a class="nav-link" href="#">Sign Up</a>
+            <a class="nav-link" href="#">Sign In</a>*@
+        @if (hostEnv.IsDevelopment())
+        {
+            <a class="nav-link" href=@($"{@config["ServerBasePath"]}Identity/Account/Register")>Create Store</a>
+            <a class="nav-link" href=@($"{@config["ServerBasePath"]}Identity/Account/Login")>Go to Store</a>
+
+        }
+        else
+        {
+            <a class="nav-link" href=@($"{@config["ServerBasePath"]}Identity/Account/Register")>Create Store</a>
+            <a class="nav-link" href=@($"{@config["ServerBasePath"]}Identity/Account/Login")>Go to Store</a>
+
+        }
+    </div>
+</nav>
+
+
+@code
+{
+    public string SearchTerm = "";
+    public IEnumerable<StoreDTO> Stores { get; set; }
+    public IEnumerable<StoreDTO> SearchByProduct { get; set; }
+    public IEnumerable<StoreDTO> SearchByCategory { get; set; }
+    public IEnumerable<StoreDTO> SearchByStore { get; set; }
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    protected override async Task OnInitializedAsync()
+    {
+        Stores = await Store.getAllStores();
+    }
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public async Task searchResult()
+    {
+        SearchByStore = Stores.Where(i => i.Name.ToLower().Contains(SearchTerm.ToLower())).ToList();
+        if (SearchTerm != "")
+        {
+            SearchByProduct = await Store.SearchStoreByProductName(SearchTerm);
+            SearchByCategory = await Store.SearchStoreByCategory(SearchTerm);
+        }
+    }
+}

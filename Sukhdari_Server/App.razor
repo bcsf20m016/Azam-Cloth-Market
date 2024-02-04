@@ -1,0 +1,21 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" >
+                <NotAuthorized>
+                    <h3 class="text-center p-4 pt-5 centerlized">
+                    It seems you are not logged in. Please login to continue <a href="/Identity/Account/Login"><span class="btn btn-primary" >Login</span></a> Or You are Unauthorized for this action In case your are administrator Go to <a href="/admin"><span class="btn btn-secondary" >Admin Panel</span></a>
+                    </h3>
+                </NotAuthorized>    
+            </AuthorizeRouteView>
+
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(StoreAdminLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+                <a class="btn btn-primary" href="/">Go to Home</a>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+

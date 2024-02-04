@@ -1,0 +1,105 @@
+﻿@page "/types"
+@layout StoreAdminLayoutT
+@inject NavigationManager Navigator
+@inject ITagTypeRepo TagTypeRepo
+@inject ITagRepo TagRepo
+@inject IJSRuntime JsRuntime
+@attribute [Authorize(Roles = Common.StaticDetails.Role_Admin)]
+
+
+<div class="card card-info">
+    <div class="card-header">
+        <div class="card-header">
+            <div class="card-title float-left pt-2">
+                <h3>Store Types</h3>
+            </div>
+
+            <div class="d-flex float-right">
+                <a href="/addtype">
+                    <button class="btn btn-info text-white">
+                        <span class="oi oi-plus mr-0 mr-md-2" />
+                        <h5 class="d-md-inline-block d-none pt-1">Add New Type</h5>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive mt-2">
+          <table class="table">
+                <caption>List of all Tags</caption>
+                <thead class="thead-light bg-info">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Tags</th>
+                        @*<th scope="col">Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (TagType != null && TagType.Any())
+                    {
+                        @foreach (var type in TagType)
+                        {
+                            <tr>
+                                <td>
+                                    @type.name
+                                </td>
+                                <td>
+                                    @foreach(var tag in Tag)
+                                    {
+                                        @if (tag.tagTypeId == type.id)
+                                        {
+                                            @tag.Name
+                                            <br />
+                                        }
+                                    }
+                                </td>
+                               
+                                <td class="d-flex align-items-center justify-content-center  flex-column flex-md-row" style="gap: 0.3rem;">
+                                    <a href="@($"/type/update/{type.id}")">
+                                        <div class="btn btn-secondary" >
+
+                                            <span class="oi oi-pencil"></span>
+                                        </div>
+                                    </a>
+                                    <div class="btn btn-danger" @onclick="()=>DeleteType(type.id)">
+                                        <span class="oi oi-trash"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+    private bool IsProcessing { get; set; } = false;
+    public IEnumerable<TagTypeDTO> TagType { get; set; }
+    public IEnumerable<TagDTO> Tag { get; set; }
+    int typeId;
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationState;
+        TagType = await TagTypeRepo.GetAllTagsType();
+        Tag = await TagRepo.getAllTags();
+    }
+    
+    protected async Task DeleteType(int id)
+    {
+        
+            await TagTypeRepo.deleteTagType(id);
+
+            Navigator.NavigateTo("/types",true);
+            await JsRuntime.ToastrSuccess("Type Deleted Successfully");
+       
+        
+    }
+}
