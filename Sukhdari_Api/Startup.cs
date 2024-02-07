@@ -73,19 +73,19 @@ namespace Sukhdari_Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUI(c =>
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
 
-                //    c.SwaggerEndpoint("/swagger/v2/swagger.json", "Azam_Cloth_Market_API v2")
-                ////c.RoutePrefix = string.Empty;
-                //);
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "Azam_Cloth_Market_API v2")
+                //c.RoutePrefix = string.Empty;
+                );
             }
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "Sukhdari_Api v2");
-                c.RoutePrefix = string.Empty;
-            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v2/swagger.json", "Sukhdari_Api v2");
+            //    c.RoutePrefix = string.Empty;
+            //});
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
