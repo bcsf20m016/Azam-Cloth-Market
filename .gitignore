@@ -3,10 +3,6 @@
 ################################################################################
 
 /.vs
-/Business
-/Common
-/DataAccess
-/Models
 /Sukhdari_Api/bin
 /Sukhdari_Api/obj
 /Sukhdari_Client/bin

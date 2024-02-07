@@ -1,0 +1,15 @@
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\bin\Release\net8.0\DataAccess.deps.json
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\bin\Release\net8.0\DataAccess.runtimeconfig.json
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\bin\Release\net8.0\DataAccess.dll
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\bin\Release\net8.0\DataAccess.pdb
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.csproj.AssemblyReference.cache
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.AssemblyInfoInputs.cache
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.AssemblyInfo.cs
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.sourcelink.json
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.dll
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\refint\DataAccess.dll
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.pdb
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\DataAccess.genruntimeconfig.cache
+C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\DataAccess\obj\Release\net8.0\ref\DataAccess.dll
