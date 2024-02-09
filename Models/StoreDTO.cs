@@ -34,5 +34,7 @@ namespace Models
         public List<string> ImageUrls { get; set; }
 
         public string UserId { get; set; }
+        [Required]
+        public string Block { get; set; }
     }
 }

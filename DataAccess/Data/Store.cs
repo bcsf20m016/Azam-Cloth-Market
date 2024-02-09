@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,5 +32,7 @@ namespace DataAccess.Data
         public string? Description { get; set; }
         public virtual ICollection<StoreImage> StoreImages { get; set; }
         public virtual ICollection<StoreAttributes> Attributes { get; set; }
+        [AllowNull]
+        public string Block { get; set; }
     }
 }

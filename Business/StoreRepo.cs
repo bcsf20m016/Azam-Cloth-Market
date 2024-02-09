@@ -47,6 +47,7 @@ namespace Business
                     oldStore.Type = store.Type;
                 }
                 oldStore.Country = store.Country;
+                oldStore.Block = store.Block;
                 oldStore.Image = store.Image;
                 oldStore.Description = store.Description;
                 if (oldStore.ClickCount != null)

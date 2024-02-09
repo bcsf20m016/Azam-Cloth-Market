@@ -103,7 +103,20 @@
                 </div>
                 <hr />
 
-                <form id="AttributesForm">
+                <h5>BLOCK</h5>
+                <div class="form-check ml-2">
+                    @if(allBlocks != null && allBlocks.Count > 0)
+                    {
+                        foreach(var block in allBlocks)
+                        {
+                            <input type="checkbox" class="form-check-input" @onchange="@(async (e)=> await HandleBlocksCheckBox(block, e.Value))" />
+                            <label class="form-check-label">@block</label>
+                            <br />
+                        }
+                    }
+                </div> <br />
+
+                @* <form id="AttributesForm">
                     @if (Attributes != null && Attributes.Count > 0)
                     {
                         foreach (var storeAttrib in Attributes)
@@ -134,7 +147,7 @@
                         AttributeValues.Clear();
                 }
                 <input type="reset" hidden />
-            </form>
+            </form> *@
       
             <div class="ml-2">
                 <input type="reset" value="Reset" class="col-5 btn btn-success" @onclick="ResetStores" />
@@ -278,6 +291,8 @@
     public List<String> AttributeValues { get; set; } = new List<string>(); //To avoid duplicate attribute values
     public IEnumerable<StoreDTO> ParticularTypeStores { get; set; } = new List<StoreDTO>(); //To hold the stores of particular store type
     public List<List<String>> selectedAttributes { get; set; } = new List<List<string>>();
+    public List<String> allBlocks { get; set; } = new List<string>();
+    public List<String> selectedBlocks { get; set; } = new List<string>();
     //My code ends here
     //MyCode ends
 
@@ -346,7 +361,10 @@
         }
         AllStores = Stores;
         FilteredStores = Stores;
-
+        allBlocks = FilteredStores.Select(i => i.Block)
+                        .Distinct()
+                        .Where(block => block != null)
+                        .ToList();
 
         //AllTags = await Store.getAllStoreTags(); --> Now, tags have no significance for now
 
@@ -540,7 +558,13 @@
         FilteredStores = AllStores.Where(i => i.Type == selectedStoreType).ToList();
         ParticularTypeStores = FilteredStores;
 
-        Attributes.Clear();
+        allBlocks.Clear();
+        allBlocks = FilteredStores.Select(i => i.Block)
+                         .Distinct()
+                         .Where(block => block != null)
+                         .ToList();
+
+        @* Attributes.Clear();
         if (FilteredStores != null && FilteredStores.Any()) //This portion is going to store the attributes of all Stores in 'Attributes'' property
         {
             foreach (var store in FilteredStores)
@@ -557,7 +581,7 @@
                     }
                 }
             }
-        }
+        } *@
     }
 
     public async Task HandleAttributesCheckBox(StoreAttributesDTO attributeValue, object checkedValue)
@@ -611,6 +635,33 @@
             if(selectedStoreType != "")
             {
                 FilteredStores = AllStores.Where(i => i.Type == selectedStoreType).ToList();
+            }
+            else
+            {
+                FilteredStores = AllStores;
+            }
+        }
+    }
+    public async Task HandleBlocksCheckBox(String block, object checkedValue)
+    {
+        if((bool)checkedValue)
+        {
+            selectedBlocks.Add(block);
+        }
+        else
+        {
+            selectedBlocks.Remove(block);
+        }
+        FilteredStores = FilteredStores.Where(store => selectedBlocks.Contains(store.Block));
+        if(!selectedBlocks.Any())
+        {
+            if (selectedStoreType != "")
+            {
+                FilteredStores = AllStores.Where(i => i.Type == selectedStoreType).ToList();
+            }
+            else
+            {
+                FilteredStores = AllStores;
             }
         }
     }

@@ -1,0 +1,149 @@
+2024-02-09 09:21:28.108 +05:00 [INF] The Application is starting
+
+
+2024-02-09 09:23:16.251 +05:00 [ERR] Error while executing OnAfterRenderAsync function in StoreDashboard component
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
+   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync(IJSRuntime jsRuntime, String identifier, Object[] args)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnAfterRenderAsync(Boolean firstRender) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 174
+
+
+2024-02-09 09:30:41.542 +05:00 [INF] The Application is starting
+
+
+2024-02-09 09:33:06.146 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:08:38.526 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:12:18.386 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:13:16.147 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:13:53.846 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:14:44.228 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:21:05.208 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:23:00.354 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:24:11.259 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:26:20.665 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:30:31.036 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:33:02.439 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:33:41.287 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:34:54.629 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:36:04.518 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:40:19.710 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:49:15.106 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:51:30.295 +05:00 [INF] The Application is starting
+
+
+2024-02-09 10:56:58.243 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:08:43.264 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:10:49.674 +05:00 [ERR] Error while executing OnAfterRenderAsync function in StoreDashboard component
+Microsoft.JSInterop.JSException: Canvas is already in use. Chart with ID '0' must be destroyed before the canvas can be reused.
+Error: Canvas is already in use. Chart with ID '0' must be destroyed before the canvas can be reused.
+    at new dn (https://localhost:44330/js/chart.min.js:13:90904)
+    at loadChart (https://localhost:44330/js/main.js:4:19)
+    at https://localhost:44330/_framework/blazor.server.js:1:3244
+    at new Promise (<anonymous>)
+    at y.beginInvokeJSFromDotNet (https://localhost:44330/_framework/blazor.server.js:1:3201)
+    at Yt._invokeClientMethod (https://localhost:44330/_framework/blazor.server.js:1:61041)
+    at Yt._processIncomingData (https://localhost:44330/_framework/blazor.server.js:1:58516)
+    at Yt.connection.onreceive (https://localhost:44330/_framework/blazor.server.js:1:52157)
+    at s.onmessage (https://localhost:44330/_framework/blazor.server.js:1:80302)
+   at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
+   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync(IJSRuntime jsRuntime, String identifier, Object[] args)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnAfterRenderAsync(Boolean firstRender) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 174
+
+
+2024-02-09 11:16:20.536 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:18:53.324 +05:00 [ERR] Error while executing OnAfterRenderAsync function in StoreDashboard component
+Microsoft.JSInterop.JSException: Canvas is already in use. Chart with ID '0' must be destroyed before the canvas can be reused.
+Error: Canvas is already in use. Chart with ID '0' must be destroyed before the canvas can be reused.
+    at new dn (https://localhost:44330/js/chart.min.js:13:90904)
+    at loadChart (https://localhost:44330/js/main.js:4:19)
+    at https://localhost:44330/_framework/blazor.server.js:1:3244
+    at new Promise (<anonymous>)
+    at y.beginInvokeJSFromDotNet (https://localhost:44330/_framework/blazor.server.js:1:3201)
+    at Yt._invokeClientMethod (https://localhost:44330/_framework/blazor.server.js:1:61041)
+    at Yt._processIncomingData (https://localhost:44330/_framework/blazor.server.js:1:58516)
+    at Yt.connection.onreceive (https://localhost:44330/_framework/blazor.server.js:1:52157)
+    at s.onmessage (https://localhost:44330/_framework/blazor.server.js:1:80302)
+   at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
+   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync(IJSRuntime jsRuntime, String identifier, Object[] args)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnAfterRenderAsync(Boolean firstRender) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 174
+
+
+2024-02-09 11:20:54.504 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:21:53.576 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:37:19.655 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:50:48.394 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:57:37.719 +05:00 [INF] The Application is starting
+
+
+2024-02-09 11:59:58.006 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:01:47.927 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:05:06.754 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:20:06.393 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:32:24.168 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:33:19.540 +05:00 [INF] The Application is starting
+
+
+2024-02-09 12:39:04.326 +05:00 [INF] The Application is starting
+
+
+2024-02-09 13:09:45.951 +05:00 [INF] The Application is starting
+
+

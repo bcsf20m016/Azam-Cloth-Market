@@ -423,8 +423,35 @@
         </div>
     </div>
 
+
+    <div class="form-group">
+        <label class="col-md-7 control-label" for="store_type">BLOCK</label>
+        <div class="col-md-7">
+            <InputSelect @bind-Value="StoreDetails.Block" class="form-control">
+                <option value="Bismillah">Bismillah</option>
+                <option value="Madina" selected>Madina</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Safeena">Safeena</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Ameen">Ameen</option>
+                <option value="Nawab">Nawab</option>
+                <option value="Anguilla">Sar Buland</option>
+                <option value="Pishawar">Pishawar</option>
+                <option value="Karachi">Karachi</option>
+                <option value="Lahore">Lahore</option>
+                <option value="Hujwiri">Hujwiri</option>
+                <option value="Akbar">Akbar</option>
+                <option value="Ittehad">Ittehad</option>
+                <option value="Muslim">Muslim</option>
+                <option value="Kashmir">Kashmir</option>
+            </InputSelect>
+
+        </div>
+    </div>
+
+
     @*New Code Starts from here of adding Dynamic Fields*@
-    @if (StoreDetails.Attributes != null && StoreDetails.Attributes.Count > 0)
+    @* @if (StoreDetails.Attributes != null && StoreDetails.Attributes.Count > 0)
     {
         @foreach (var attrib in StoreDetails.Attributes)
         {
@@ -445,7 +472,7 @@
         <div class="col-md-7">
             <button type="button" class="btn btn-info" @onclick="AddAttribute">Add More Information</button>
         </div>
-    </div>
+    </div> *@
     @*New Code Ends here*@
 
     <div class="form-group">

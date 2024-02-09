@@ -224,6 +224,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Block")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ClickCount")
                         .HasColumnType("int");
 
