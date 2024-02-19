@@ -114,7 +114,7 @@
         public int? clicks { get; set; }
     }
     List<CategoryClickCount> categoryClick = new List<CategoryClickCount>();
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -124,36 +124,43 @@
             { 
                 Navigator.NavigateTo("/storeNotExist");
             }
-            categoryCount = await Category.getCategoryCount(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
-            productCount = await Product.getProductCount(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
-        
-            var products = await Product.getAllProducts(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
-            var topProducts = products.OrderByDescending(i => i.ClickCount).Take(5);
-            totalClickCount = products.Sum(i => i.ClickCount);
-            clicksData = new double[topProducts.Count()];
-            productNames = new string[topProducts.Count()];
-            foreach (var product in topProducts)
+            var store = Store.GetStoreByAdminName(authState.User.Identity.Name);
+            if(store != null)
             {
-                double temp = (double)product.ClickCount;
-                clicksData[count] = temp;
-                productNames[count] = product.Name;
-                count++;
-            }
-            var categories = await Category.GetAllCategories(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
-            if(categories != null && categories.Any())
-            {
-                var topCategories = categories.OrderByDescending(i => i.ClickCount).Take(5);
-                if(topCategories != null && topCategories.Any())
+                categoryCount = await Category.getCategoryCount(store.Id);
+                productCount = await Product.getProductCount(store.Id);
+                var products = await Product.getAllProducts(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
+                var topProducts = products.OrderByDescending(i => i.ClickCount).Take(5);
+                totalClickCount = products.Sum(i => i.ClickCount);
+                clicksData = new double[topProducts.Count()];
+                productNames = new string[topProducts.Count()];
+                foreach (var product in topProducts)
                 {
-                    foreach(var category in topCategories)
+                    double temp = (double)product.ClickCount;
+                    clicksData[count] = temp;
+                    productNames[count] = product.Name;
+                    count++;
+                }
+                var categories = await Category.GetAllCategories(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
+                if (categories != null && categories.Any())
+                {
+                    var topCategories = categories.OrderByDescending(i => i.ClickCount).Take(5);
+                    if (topCategories != null && topCategories.Any())
                     {
-                        CategoryClickCount temp = new CategoryClickCount();
-                        temp.name = category.Name;
-                        temp.clicks = category.ClickCount;
-                        categoryClick.Add(temp);
+                        foreach (var category in topCategories)
+                        {
+                            CategoryClickCount temp = new CategoryClickCount();
+                            temp.name = category.Name;
+                            temp.clicks = category.ClickCount;
+                            categoryClick.Add(temp);
+                        }
                     }
                 }
             }
+
+            //productCount = await Product.getProductCount(Store.GetStoreByAdminName(authState.User.Identity.Name).Id);
+        
+            
         }
         catch (Exception ex)
         {

@@ -36,5 +36,7 @@ namespace Models
         public string UserId { get; set; }
         [Required]
         public string Block { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Shop No")]
+        public string ShopNo { get; set; }
     }
 }

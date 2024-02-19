@@ -34,5 +34,7 @@ namespace DataAccess.Data
         public virtual ICollection<StoreAttributes> Attributes { get; set; }
         [AllowNull]
         public string Block { get; set; }
+        [AllowNull]
+        public string ShopNo { get; set; }
     }
 }

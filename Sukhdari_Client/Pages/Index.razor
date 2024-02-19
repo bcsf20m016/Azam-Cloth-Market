@@ -300,17 +300,19 @@
     public string StAddress { get; set; }
     public string StDescrition { get; set; }
     public string email { get; set; }
+    public string ShopNo { get; set; }
 
     private async Task OpenDialogAbout(int storeId)
     {
         var storeClicked = AllStores.FirstOrDefault(i => i.Id == storeId);
         StDescrition = storeClicked.Description;
         StAddress = storeClicked.Address;
+        ShopNo = storeClicked.ShopNo != null ? storeClicked.ShopNo : "-";
 
         var result = await Swal.FireAsync(new SweetAlertOptions
             {
                 ShowCloseButton = true,
-                Html = $"<strong>Store Info: </strong>{StDescrition}<br><br><strong>Location: </strong> {StAddress}",
+                Html = $"<strong>Store Info: </strong>{StDescrition}<br><br><strong>Location: </strong> {StAddress}<br><br><strong>Shop No: </strong> {ShopNo}",
                 TitleText = "About Us",
                 ShowCancelButton = true,
                 CancelButtonText = "Cancel",

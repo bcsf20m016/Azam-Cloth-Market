@@ -1,0 +1,319 @@
+2024-02-18 11:53:11.308 +05:00 [INF] The Application is starting
+
+
+2024-02-18 11:56:47.874 +05:00 [INF] The Application is starting
+
+
+2024-02-18 12:00:58.354 +05:00 [ERR] Error while executing OnAfterRenderAsync function in StoreDashboard component
+System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
+   at Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync(IJSRuntime jsRuntime, String identifier, Object[] args)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnAfterRenderAsync(Boolean firstRender) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 174
+
+
+2024-02-18 12:12:54.075 +05:00 [INF] The Application is starting
+
+
+2024-02-18 12:14:04.115 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 12:14:06.774 +05:00 [ERR] Error while loading StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 127
+
+
+2024-02-18 12:17:28.227 +05:00 [INF] The Application is starting
+
+
+2024-02-18 12:18:03.730 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 12:18:07.514 +05:00 [ERR] Error while loading StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 127
+
+
+2024-02-18 12:19:02.359 +05:00 [INF] The Application is starting
+
+
+2024-02-18 12:21:38.152 +05:00 [INF] The Application is starting
+
+
+2024-02-18 15:04:16.730 +05:00 [INF] The Application is starting
+
+
+2024-02-18 15:55:34.133 +05:00 [INF] The Application is starting
+
+
+2024-02-18 15:57:52.252 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 15:57:54.916 +05:00 [ERR] Error while loading StoreDashboard component
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 127
+
+
+2024-02-18 15:58:43.633 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'Image', table 'SukhdariDB.Sukhdari.Stores'; column does not allow nulls. INSERT fails.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:a6e069eb-4345-4a8c-987f-f7f2c51c0ba0
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 80
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\CreateStore.razor:line 703
+
+
+2024-02-18 16:00:02.475 +05:00 [INF] The Application is starting
+
+
+2024-02-18 16:02:32.131 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 16:47:50.824 +05:00 [INF] The Application is starting
+
+
+2024-02-18 16:48:50.188 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 16:56:25.502 +05:00 [INF] The Application is starting
+
+
+2024-02-18 16:56:41.082 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 16:58:18.496 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'Image', table 'SukhdariDB.Sukhdari.Stores'; column does not allow nulls. INSERT fails.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:ba8cf7e2-8b87-40f8-bda8-ff9a73c0bb30
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 80
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO()
+
+
+2024-02-18 16:58:25.041 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method288(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 73
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO()
+
+
+2024-02-18 16:58:26.605 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'Image', table 'SukhdariDB.Sukhdari.Stores'; column does not allow nulls. UPDATE fails.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:ba8cf7e2-8b87-40f8-bda8-ff9a73c0bb30
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 80
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO()
+
+
+2024-02-18 16:59:32.613 +05:00 [INF] The Application is starting
+
+
+2024-02-18 16:59:59.719 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 17:02:33.864 +05:00 [INF] The Application is starting
+
+
+2024-02-18 17:02:57.380 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 17:06:02.721 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'Image', table 'SukhdariDB.Sukhdari.Stores'; column does not allow nulls. INSERT fails.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:76a8364a-7435-46f5-8043-4b20e5e5d8ae
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 80
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\CreateStore.razor:line 703
+
+
+2024-02-18 17:31:01.363 +05:00 [INF] The Application is starting
+
+
+2024-02-18 17:31:40.939 +05:00 [ERR] Error while loading StoreDashboard component
+Microsoft.AspNetCore.Components.NavigationException: Exception of type 'Microsoft.AspNetCore.Components.NavigationException' was thrown.
+   at Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(String uri, NavigationOptions options)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateToCore(String uri, Boolean forceLoad)
+   at Microsoft.AspNetCore.Components.NavigationManager.NavigateTo(String uri, Boolean forceLoad, Boolean replace)
+   at Sukhdari_Server.Pages.Store.StoreDashboard.OnInitializedAsync() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\StoreDashboard.razor:line 125
+
+
+2024-02-18 17:32:18.023 +05:00 [ERR] Error while executing HandleImageUpload function in CreateStore component
+System.IO.IOException: Supplied file with size 1577832 bytes exceeds the maximum of 512000 bytes.
+   at Sukhdari_Server.Service.ImageUpload.uploadImage(IBrowserFile image) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Service\ImageUpload.cs:line 72
+   at Sukhdari_Server.Pages.Store.CreateStore.HandleImageUpload(InputFileChangeEventArgs e) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\CreateStore.razor:line 735
+
+
+2024-02-18 17:35:35.769 +05:00 [ERR] Error while executing CreateStoreWithDTO function in CreateStore component
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'Image', table 'SukhdariDB.Sukhdari.Stores'; column does not allow nulls. INSERT fails.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:10781625-c33e-4087-889a-c66239ec17b2
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Business.StoreRepo.createStore(StoreDTO store) in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Business\StoreRepo.cs:line 80
+   at Sukhdari_Server.Pages.Store.CreateStore.CreateStoreWithDTO() in C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Pages\Store\CreateStore.razor:line 703
+
+

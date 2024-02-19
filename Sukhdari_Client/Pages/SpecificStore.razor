@@ -248,6 +248,7 @@
     public IEnumerable<ProductDTO> Products { get; set; }
     public int? selectedCategory { get; set; } = null;
     public IEnumerable<CategoryDTO> Categories { get; set; }
+    public string storeName { get; set; }
 
     // I am Adding
     private List<CategoryAttributesDTO> Attributes = new List<CategoryAttributesDTO>(); //To store category attributes
@@ -276,6 +277,7 @@
         Products = await localStorage.GetItemAsync<IEnumerable<ProductDTO>>($"storeProductsWithID{Id}");
         DateTime? productsCachedDate = await localStorage.GetItemAsync<DateTime?>($"storeProductsWithID{Id}CachedDate");
         allCategories = await localStorage.GetItemAsync<IEnumerable<CategoryDTO>>($"storeCategoriesWithID{Id}");
+        storeName = await localStorage.GetItemAsync<String>($"storeNameWithID{Id}");
 
         double totalCachedHours = 0;
         if (productsCachedDate is not null)
@@ -283,9 +285,10 @@
             totalCachedHours = DateTime.UtcNow.Subtract((DateTime)productsCachedDate).TotalHours;
         }
 
-        if (Products is null || allCategories is null || productsCachedDate is null || totalCachedHours > 24)
+        if (Products is null || allCategories is null || productsCachedDate is null || storeName is null || totalCachedHours > 24)
         {
             Products = await Store.GetStoreProducts(Id);
+            
             allCategories = await Store.getStoreCategories(Id);
             await localStorage.SetItemAsync($"storeProductsWithID{Id}", Products);
             await localStorage.SetItemAsync($"storeCategoriesWithID{Id}", allCategories);

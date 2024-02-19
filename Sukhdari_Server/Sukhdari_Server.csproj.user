@@ -5,7 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Properties\PublishProfiles\SukhdariServerProject - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\bilal\OneDrive\Documents\Azam Cloth Market\Sukhdari_Server\Properties\PublishProfiles\server.powerlatics.com - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
     <RazorPage_SelectedScaffolderID>RazorComponentScaffolder</RazorPage_SelectedScaffolderID>
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorComponent</RazorPage_SelectedScaffolderCategoryPath>
   </PropertyGroup>

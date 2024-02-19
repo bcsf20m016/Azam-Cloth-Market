@@ -48,6 +48,7 @@ namespace Business
                 }
                 oldStore.Country = store.Country;
                 oldStore.Block = store.Block;
+                oldStore.ShopNo = store.ShopNo;
                 oldStore.Image = store.Image;
                 oldStore.Description = store.Description;
                 if (oldStore.ClickCount != null)
